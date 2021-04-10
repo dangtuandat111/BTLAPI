@@ -1,0 +1,6 @@
+--READ.TXT--
+TẮT DÒNG 724 FILE BTLAPI.CPP ĐỂ CHẠY MƯỢT 
+- KIỂM TRA XEM CÒN LỖI J KHÔNG 
+- XEM CÓ CẦN CẢI THIỆN J KHÔNG 
+- ĐỌC QUA CODE ĐI 
+- T4 (14/10) : NỘP  HOẶC T5(15/10)
