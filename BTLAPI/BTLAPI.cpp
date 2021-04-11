@@ -195,10 +195,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 	static int Hinh = 0, xLeft, yTop, xRight, yBottom;
 
-	CHOOSECOLOR  cc; // Thông tin màu chọn
-	COLORREF  acrCustClr[16]; // Mảng custom color
-	DWORD  rgbCurrent = RGB(0, 0, 0); // Red
-	HBRUSH  hbrush; // Tạo ra brush từ màu đã chọn
+	CHOOSECOLOR  cc; 
+	COLORREF  acrCustClr[16];
+	DWORD  rgbCurrent = RGB(0, 0, 0); 
+	HBRUSH  hbrush; 
 	int newColor = 0;
 
 	int count = 0;
@@ -403,7 +403,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 1) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -411,7 +411,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -419,7 +419,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -435,7 +435,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 1) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -444,7 +444,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -452,7 +452,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -468,7 +468,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 1) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1.",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -476,7 +476,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1.",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -484,7 +484,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .Set size = 1",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -501,7 +501,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 1) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -510,7 +510,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -519,7 +519,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
-						MessageBox(0, L"Only use with size = 1.Set size = 1",
+						MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 .",
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
@@ -580,7 +580,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			case 58: {
 				if (currentSize != 1) {
-					MessageBox(0, L"Only use with size = 1",
+					MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 ",
 						L"Warning", MB_ICONINFORMATION | MB_OK);
 					currentSize = 1;
 				}
@@ -596,7 +596,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}	
 			case 59: {
 				if (currentSize != 1) {
-					MessageBox(0, L"Only use with size = 1",
+					MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 ",
 						L"Warning", MB_ICONINFORMATION | MB_OK);
 					currentSize = 1;
 				}
@@ -612,7 +612,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}	
 			case 60: {
 				if (currentSize != 1) {
-					MessageBox(0, L"Only use with size = 1",
+					MessageBox(0, L"Chỉ sử dụng với size là 1.Thay đổi size về 1 ",
 						L"Warning", MB_ICONINFORMATION | MB_OK);
 					currentSize = 1;
 				}
@@ -642,8 +642,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 				break;
             case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
+				if (MessageBox(NULL, TEXT("Bạn có muốn thoát chương trình không"), TEXT("THÔNG BÁO"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
+					DestroyWindow(hWnd);
+				}
+				break;
+			case ID_FILE_EXIT:
+				if (MessageBox(NULL, TEXT("Bạn có muốn thoát chương trình không?"), TEXT("THÔNG BÁO"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
+					DestroyWindow(hWnd);
+				}
+				break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -721,10 +728,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HDC hdc = BeginPaint(hWnd, &ps);
 			// TODO: Add any drawing code that uses hdc here...
 			EndPaint(hWnd, &ps);
-			DrawInline(hbrushMaunut,hWnd,color);
+			//DrawInline(hbrushMaunut,hWnd,color);
             // TODO: Add any drawing code that uses hdc here...
 			break;
         }
+	case WM_CLOSE: 
+		if (MessageBox(NULL, TEXT("Bạn có muốn thoát chương trình không"), TEXT("THÔNG BÁO"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
+			DestroyWindow(hWnd);
+		}
+		else {
+			break;
+		}
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
