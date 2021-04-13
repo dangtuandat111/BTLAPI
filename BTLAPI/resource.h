@@ -3,6 +3,7 @@
 // Used by BTLAPI.rc
 //
 #define IDC_MYICON                      2
+#define MAX_LOADSTRING                  100
 #define IDD_BTLAPI_DIALOG               102
 #define IDS_APP_TITLE                   103
 #define IDD_ABOUTBOX                    103
@@ -20,10 +21,8 @@
 #define ID_EDIT_REDO                    32776
 #define ID_FILE_SAVE                    32777
 #define ID_VIEW_TOOLBOX                 32778
+#define ID_OPTION_DRAW                  32779
 #define IDC_STATIC                      -1
-
-#pragma once
-#define MAX_LOADSTRING 100
 
 // Next default values for new objects
 // 
@@ -31,7 +30,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
-#define _APS_NEXT_COMMAND_VALUE         32779
+#define _APS_NEXT_COMMAND_VALUE         32786
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

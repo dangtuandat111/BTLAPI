@@ -35,8 +35,13 @@ static COLORREF currentMauVien = RGB(0, 0, 0);
 static COLORREF currentSize = 1;
 static int currentStyle = 0;
 static HDC hdc;
-
+static int xLeft=0, yTop=0, xRight=0, yBottom=0;
 int exist = 0;
+
+BOOLEAN isDraw = false;
+BOOLEAN isClick = false;
+int start = 0;
+
 
 HDC temp_hdc;
 HWND temp_hWnd;
@@ -51,23 +56,22 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 //Funtion
-void DrawLine(HDC hdc, int left, int top, int right, int bottom);
-void DrawIsosceleTriangle(HDC hdc, int left, int top, int right, int bottom);
-void DrawTriangle(HDC hdc, int left, int top, int right, int bottom);
-void DrawQuadrilateral(HDC hdc, int left, int top, int right, int bottom);
-void DrawPentagon(HDC hdc, int left, int top, int right, int bottom);
-void DrawHexagon(HDC hdc, int left, int top, int right, int bottom);
-void DrawForwardArrow(HDC hdc, int left, int top, int right, int bottom);
-void DrawBackArrow(HDC hdc, int left, int top, int right, int bottom);
-void DrawDownArrow(HDC hdc, int left, int top, int right, int bottom);
-void DrawUpArrow(HDC hdc, int left, int top, int right, int bottom);
-void DrawFourPointStar(HDC hdc, int left, int top, int right, int bottom);
-void DrawFivePointStar(HDC hdc, int left, int top, int right, int bottom);
-void DrawSixPointStar(HDC hdc, int left, int top, int right, int bottom);
-void DrawLightning(HDC hdc, int left, int top, int right, int bottom);
-void DrawRoundRect(HDC hdc, int left, int top, int right, int bottom);
+void DrawDT(HDC hdc, int left, int top, int right, int bottom);
+void DrawTGC(HDC hdc, int left, int top, int right, int bottom);
+void DrawTGV(HDC hdc, int left, int top, int right, int bottom);
+void DrawHT(HDC hdc, int left, int top, int right, int bottom);
+void DrawNG(HDC hdc, int left, int top, int right, int bottom);
+void DrawLG(HDC hdc, int left, int top, int right, int bottom);
+void DrawMT_Right(HDC hdc, int left, int top, int right, int bottom);
+void DrawMT_Left(HDC hdc, int left, int top, int right, int bottom);
+void DrawMT_Down(HDC hdc, int left, int top, int right, int bottom);
+void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom);
+void DrawNS_4(HDC hdc, int left, int top, int right, int bottom);
+void DrawNS_5(HDC hdc, int left, int top, int right, int bottom);
+void DrawNS_6(HDC hdc, int left, int top, int right, int bottom);
+
+void DrawHCN(HDC hdc, int left, int top, int right, int bottom);
 void DrawInline(HBRUSH hbrush,HWND hWnd, COLORREF color[]);
-void setToolBox(HDC hdc, HWND hWnd, HPEN hPen, HBRUSH hBrush);
 void SaveImage();
 void ExportImage();
 void OpenImage();
@@ -155,7 +159,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    HWND hWnd1 = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | ES_AUTOHSCROLL | ES_AUTOVSCROLL,
 	   0, 0, 50, 50, nullptr, nullptr, hInstance, nullptr);
    hwndMain = hWnd1;
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -193,7 +197,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static HBRUSH hbrushMaunut;
 	static HBRUSH hBrushHinh = CreateSolidBrush(RGB(255, 255, 255));
 	static HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-	static int Hinh = 0, xLeft, yTop, xRight, yBottom;
+	static int Hinh = 0;
 
 	CHOOSECOLOR  cc; 
 	COLORREF  acrCustClr[16];
@@ -209,8 +213,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_SIZE: //khi kích thước cửa sổ chính của chương trình thay đổi mới chạy vào phần này, khi mới chạy chương trình cũng nhảy vào đây
 	{
+		DrawInline(hbrushMaunut, hWnd, color);
 		if (exist == 0) {
-			setToolBox(temp_hdc, hWnd, temp_hPen, temp_hBrush);
+			
 			int width = LOWORD(lParam);
 			int height = HIWORD(lParam);
 
@@ -249,7 +254,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), labelGroup[i - 2], WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 180 + (i - 2) * 200 - 170, 20, 150, 130, hWnd, (HMENU)(56), NULL, NULL);
 		//57-60
 		for (i = 57;i <= 60;i++) {
-			hwndStyleBrush[i - 57] = CreateWindow(TEXT("button"), TEXT(""), WS_VISIBLE | WS_CHILD | BS_AUTOCHECKBOX, 815, 40 + (i-57) * 30 , 30, 15, hWnd, (HMENU)(i), NULL, NULL);
+			hwndStyleBrush[i - 57] = CreateWindow(TEXT("button"), NULL, WS_VISIBLE | WS_CHILD | BS_AUTOCHECKBOX, 820, 42 + (i-57) * 30 , 15, 15, hWnd, (HMENU)(i), NULL, NULL);
 		}
 		//58
 		//hwndCurrentColor = CreateWindow(TEXT("button"), TEXT(""), WS_VISIBLE | WS_CHILD | BS_GROUPBOX, 965, 20, 100, 130, hWnd, (HMENU)(58), NULL, NULL);
@@ -299,7 +304,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	case WM_MOUSEMOVE:
-		if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 965 && HIWORD(lParam) <= 504) { OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE); }
+		if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 965 && HIWORD(lParam) <= 504) 
+		{ OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE); }
 		else OnMouseMove(hWnd, 0, 0, TRUE);
 		break;
     case WM_COMMAND:
@@ -340,14 +346,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case 36:
 				currentMauNen = color[wmId - 26];
 				hBrushHinh = CreateSolidBrush(currentMauNen);
-				/*
-				PAINTSTRUCT ps;
-				hdc = BeginPaint(hwndCurrentColor, &ps);
-				SelectObject(hdc, hBrushHinh);
-				Rectangle(hdc, 2, 10, 97, 127);
-				EndPaint(hwndCurrentColor, &ps);
-				*/
-				
 				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			case 37:
@@ -425,7 +423,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				InvalidateRect(hWnd, NULL, FALSE);
+				//InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 50: {
@@ -458,7 +456,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				InvalidateRect(hWnd, NULL, FALSE);
+				//InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 51: {
@@ -491,7 +489,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
 				
-				InvalidateRect(hWnd, NULL, FALSE);
+				//InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 52: {
@@ -525,18 +523,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				InvalidateRect(hWnd, NULL, FALSE);
+				//InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			
 				
 			case 54:
 			{
-				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
+				memset(&cc, 0, sizeof(CHOOSECOLOR));
+				//ZeroMemory(&cc, sizeof(CHOOSECOLOR));
 				cc.lStructSize = sizeof(CHOOSECOLOR);
 				cc.hwndOwner = hWnd;
 				cc.lpCustColors = (LPDWORD)acrCustClr;
-				cc.rgbResult = rgbCurrent;
 				cc.Flags = CC_FULLOPEN | CC_RGBINIT;
 				if (ChooseColor(&cc))
 				{
@@ -554,14 +552,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
 				cc.lStructSize = sizeof(CHOOSECOLOR);
 				cc.hwndOwner = hWnd;
-				cc.lpCustColors = (LPDWORD)acrCustClr;
-				cc.rgbResult = rgbCurrent;
+				cc.lpCustColors = acrCustClr;
 				cc.Flags = CC_FULLOPEN | CC_RGBINIT;
 				if (ChooseColor(&cc))
 				{
 					currentMauVien = cc.rgbResult;
-					hPen = CreatePen(PS_SOLID, currentSize, currentMauVien);
-				}
+					if (currentStyle == 0) {
+						hPen = CreatePen(PS_SOLID, currentSize, currentMauVien);
+					}
+					else if(currentStyle == 1){
+						hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
+					}
+					else if(currentStyle == 2) {
+						hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
+					}
+					else if(currentStyle == 3) {
+					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
+						}
+					}
 				
 				ReleaseDC(hWnd, hdc);
 				break;
@@ -646,6 +654,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					DestroyWindow(hWnd);
 				}
 				break;
+			case ID_OPTION_DRAW:
+				if (isDraw == true) {
+					
+					isDraw = false;
+					isClick = false;
+					break;
+				}
+				else
+				{
+					isDraw = true;
+					isClick = false;
+				}
+				break;
+
 			case ID_FILE_EXIT:
 				if (MessageBox(NULL, TEXT("Bạn có muốn thoát chương trình không?"), TEXT("THÔNG BÁO"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
 					DestroyWindow(hWnd);
@@ -654,14 +676,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
+			
         }
         break;
 	case WM_LBUTTONDOWN:
 		xLeft = LOWORD(lParam);
 		yTop = HIWORD(lParam);
+		isClick = true;
+		//ReleaseDC(hWnd, hdc);
 		break;
 	case WM_LBUTTONUP:
 	{
+		if (isDraw == true) {
+			isClick = false;
+			xLeft = 0;
+			yTop = 0;
+			xRight = 0;
+			yBottom = 0;
+			start = 0;
+			break;
+			
+		}
+
 		xRight = LOWORD(lParam);
 		yBottom = HIWORD(lParam);
 		if (yTop <= 160 | xLeft <= 5 | yBottom <= 160 | xRight <= 5 | yTop > 505 | yBottom > 505) break;
@@ -674,50 +710,56 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SelectObject(hdc, hPen);
 		SelectObject(hdc, hBrushHinh);
 		if (Hinh == 0) {
-			DrawLine(hdc, xLeft, yTop, xRight, yBottom);
+			DrawDT(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 1) {
-			DrawIsosceleTriangle(hdc, xLeft, yTop, xRight, yBottom);
+			DrawTGC(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 2) {
-			DrawTriangle(hdc, xLeft, yTop, xRight, yBottom);
+			DrawTGV(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 3) {
-			DrawQuadrilateral(hdc, xLeft, yTop, xRight, yBottom);
+			DrawHT(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 4) {
-			DrawPentagon(hdc, xLeft, yTop, xRight, yBottom);
+			DrawNG(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 5) {
-			DrawHexagon(hdc, xLeft, yTop, xRight, yBottom);
+			DrawLG(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 6) {
-			DrawForwardArrow(hdc, xLeft, yTop, xRight, yBottom);
+			DrawMT_Right(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 7) {
-			DrawBackArrow(hdc, xLeft, yTop, xRight, yBottom);
+			DrawMT_Left(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 8) {
-			DrawDownArrow(hdc, xLeft, yTop, xRight, yBottom);
+			DrawMT_Down(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 9) {
-			DrawUpArrow(hdc, xLeft, yTop, xRight, yBottom);
+			DrawMT_UP(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 10) {
-			DrawFourPointStar(hdc, xLeft, yTop, xRight, yBottom);
+			DrawNS_4(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 11) {
-			DrawFivePointStar(hdc, xLeft, yTop, xRight, yBottom);
+			DrawNS_5(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 12) {
-			DrawSixPointStar(hdc, xLeft, yTop, xRight, yBottom);
+			DrawNS_6(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 13) {
 			Rectangle(hdc, xLeft, yTop, xRight, yBottom);
 		}
 		else if (Hinh == 14) {
-			DrawRoundRect(hdc, xLeft, yTop, xRight, yBottom);
+			DrawHCN(hdc, xLeft, yTop, xRight, yBottom);
 		}
+
+		xLeft = 0;
+		yTop = 0;
+		xRight = 0; 
+		yBottom = 0;
+		isClick = false;
 		ReleaseDC(hWnd, hdc);
 		break;
 	}
@@ -728,7 +770,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HDC hdc = BeginPaint(hWnd, &ps);
 			// TODO: Add any drawing code that uses hdc here...
 			EndPaint(hWnd, &ps);
-			//DrawInline(hbrushMaunut,hWnd,color);
+			DrawInline(hbrushMaunut,hWnd,color);
             // TODO: Add any drawing code that uses hdc here...
 			break;
         }
@@ -767,7 +809,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
-void DrawLine(HDC hdc, int left, int top, int right, int bottom) {
+void DrawDT(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[2];
 	p[0].x = left;
 	p[0].y = top;
@@ -775,7 +817,7 @@ void DrawLine(HDC hdc, int left, int top, int right, int bottom) {
 	p[1].y = bottom;
 	Polyline(hdc, p, 2);
 }
-void DrawIsosceleTriangle(HDC hdc, int left, int top, int right, int bottom) {
+void DrawTGC(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[4];
 	p[3].x = p[0].x = left + (right - left) / 2;
 	p[3].y = p[0].y = top;
@@ -784,7 +826,7 @@ void DrawIsosceleTriangle(HDC hdc, int left, int top, int right, int bottom) {
 	p[2].x = right;
 	Polygon(hdc, p, 4);
 }
-void DrawTriangle(HDC hdc, int left, int top, int right, int bottom) {
+void DrawTGV(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[4];
 	p[3].x = p[0].x = left;
 	p[3].y = p[0].y = top;
@@ -793,7 +835,7 @@ void DrawTriangle(HDC hdc, int left, int top, int right, int bottom) {
 	p[2].x = right;
 	Polygon(hdc, p, 4);
 }
-void DrawQuadrilateral(HDC hdc, int left, int top, int right, int bottom) {
+void DrawHT(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[5];
 	p[4].x = p[0].x = left + (right - left) / 2;
 	p[4].y = p[0].y = top;
@@ -807,7 +849,7 @@ void DrawQuadrilateral(HDC hdc, int left, int top, int right, int bottom) {
 	p[3].x = left;
 	Polygon(hdc, p, 5);
 }
-void DrawPentagon(HDC hdc, int left, int top, int right, int bottom) {
+void DrawNG(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[6];
 	p[5].x = p[0].x = left + (right - left) / 2;
 	p[5].y = p[0].y = top;
@@ -823,7 +865,7 @@ void DrawPentagon(HDC hdc, int left, int top, int right, int bottom) {
 	p[4].x = right;
 	Polygon(hdc, p, 6);
 }
-void DrawHexagon(HDC hdc, int left, int top, int right, int bottom) {
+void DrawLG(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[7];
 	p[6].x = p[0].x = p[3].x = left + (right - left) / 2;
 	p[6].y = p[0].y = top;
@@ -837,7 +879,7 @@ void DrawHexagon(HDC hdc, int left, int top, int right, int bottom) {
 	p[3].y = bottom;
 	Polygon(hdc, p, 7);
 }
-void DrawForwardArrow(HDC hdc, int left, int top, int right, int bottom) {
+void DrawMT_Right(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
 		int t = left;
 		left = right;
@@ -857,7 +899,7 @@ void DrawForwardArrow(HDC hdc, int left, int top, int right, int bottom) {
 	p[6].y = top + (bottom - top) / 2;
 	Polygon(hdc, p, 8);
 }
-void DrawBackArrow(HDC hdc, int left, int top, int right, int bottom) {
+void DrawMT_Left(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
 		int t = left;
 		left = right;
@@ -877,7 +919,7 @@ void DrawBackArrow(HDC hdc, int left, int top, int right, int bottom) {
 	p[6].y = top + (bottom - top) / 2;
 	Polygon(hdc, p, 8);
 }
-void DrawDownArrow(HDC hdc, int left, int top, int right, int bottom) {
+void DrawMT_Down(HDC hdc, int left, int top, int right, int bottom) {
 	if (bottom < top) {
 		int t = top;
 		top = bottom;
@@ -896,7 +938,7 @@ void DrawDownArrow(HDC hdc, int left, int top, int right, int bottom) {
 	p[5].x = p[6].x = left + 3 * (right - left) / 4;
 	Polygon(hdc, p, 8);
 }
-void DrawUpArrow(HDC hdc, int left, int top, int right, int bottom) {
+void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom) {
 	if (bottom < top) {
 		int t = top;
 		top = bottom;
@@ -915,7 +957,7 @@ void DrawUpArrow(HDC hdc, int left, int top, int right, int bottom) {
 	p[5].x = p[6].x = left + 3 * (right - left) / 4;
 	Polygon(hdc, p, 8);
 }
-void DrawFourPointStar(HDC hdc, int left, int top, int right, int bottom) {
+void DrawNS_4(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[9];
 	p[4].x = p[8].x = p[0].x = left + (right - left) / 2;
 	p[8].y = p[0].y = top;
@@ -933,7 +975,7 @@ void DrawFourPointStar(HDC hdc, int left, int top, int right, int bottom) {
 	p[6].x = right;
 	Polygon(hdc, p, 9);
 }
-void DrawFivePointStar(HDC hdc, int left, int top, int right, int bottom) {
+void DrawNS_5(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[11];
 	p[10].x = p[0].x = left + (right - left) / 2;
 	p[10].y = p[0].y = top;
@@ -965,7 +1007,7 @@ void DrawFivePointStar(HDC hdc, int left, int top, int right, int bottom) {
 	p[9].y = top + 3 * (bottom - top) / 8;
 	Polygon(hdc, p, 11);
 }
-void DrawSixPointStar(HDC hdc, int left, int top, int right, int bottom) {
+void DrawNS_6(HDC hdc, int left, int top, int right, int bottom) {
 	POINT p[13];
 	p[6].x = p[12].x = p[0].x = left + (right - left) / 2;
 	p[12].y = p[0].y = top;
@@ -1034,7 +1076,7 @@ void DrawLightning(HDC hdc, int left, int top, int right, int bottom) {
 	p[10].y = top + 6 * (bottom - top) / 20;
 	Polygon(hdc, p, 12);
 }
-void DrawRoundRect(HDC hdc, int left, int top, int right, int bottom) {
+void DrawHCN(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
 		int t = left;
 		left = right;
@@ -1055,49 +1097,64 @@ void DrawInline(HBRUSH hbrushMaunut,HWND hWnd, COLORREF color[]) {
 	PAINTSTRUCT ps;
 	
 	hdc = BeginPaint(hwndShape[0], &ps);
-	DrawLine(hdc, 5, 5, 15, 15);
+	DrawDT(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[0], &ps);
 
 	hdc = BeginPaint(hwndShape[1], &ps);
-	DrawIsosceleTriangle(hdc, 5, 5, 15, 15);
+	DrawTGC(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[1], &ps);
 
 	hdc = BeginPaint(hwndShape[2], &ps);
-	DrawTriangle(hdc, 5, 5, 15, 15);
+	DrawTGV(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[2], &ps);
 
 	hdc = BeginPaint(hwndShape[3], &ps);
-	DrawQuadrilateral(hdc, 5, 5, 15, 15);
+	DrawHT(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[3], &ps);
 
 	hdc = BeginPaint(hwndShape[4], &ps);
-	DrawPentagon(hdc, 5, 5, 15, 15);
+	DrawNG(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[4], &ps);
 
 	hdc = BeginPaint(hwndShape[5], &ps);
-	DrawHexagon(hdc, 5, 5, 15, 15);
+	DrawLG(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[5], &ps);
 
 	hdc = BeginPaint(hwndShape[6], &ps);
-	DrawForwardArrow(hdc, 5, 5, 15, 15);
+	DrawMT_Right(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[6], &ps);
 
 	hdc = BeginPaint(hwndShape[7], &ps);
-	DrawBackArrow(hdc, 5, 5, 15, 15);
+	DrawMT_Left(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[7], &ps);
 
 	hdc = BeginPaint(hwndShape[8], &ps);
-	DrawDownArrow(hdc, 5, 5, 15, 15);
+	DrawMT_Down(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[8], &ps);
 
 	hdc = BeginPaint(hwndShape[9], &ps);
-	DrawUpArrow(hdc, 5, 5, 15, 15);
+	DrawMT_UP(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[9], &ps);
 
 	hdc = BeginPaint(hwndShape[10], &ps);
-	DrawFourPointStar(hdc, 5, 5, 15, 15);
+	DrawNS_4(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[10], &ps);
 
 	hdc = BeginPaint(hwndShape[11], &ps);
-	DrawFivePointStar(hdc, 5, 5, 15, 15);
+	DrawNS_5(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[11], &ps);
 
 	hdc = BeginPaint(hwndShape[12], &ps);
-	DrawSixPointStar(hdc, 5, 5, 15, 15);
+	DrawNS_6(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[12], &ps);
 
 	hdc = BeginPaint(hwndShape[13], &ps);
 	Rectangle(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[13], &ps);
 
 	hdc = BeginPaint(hwndShape[14], &ps);
-	DrawRoundRect(hdc, 5, 5, 15, 15);
+	DrawHCN(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[14], &ps);
 	
 	for (int i = 0;i < 10;i++) {
 		hbrushMaunut = CreateSolidBrush(color[i]);
@@ -1114,18 +1171,46 @@ void DrawInline(HBRUSH hbrushMaunut,HWND hWnd, COLORREF color[]) {
 		EndPaint(hwndMauVien[i], &ps);
 	}
 
-	EndPaint(hwndShape[0], &ps);
-	EndPaint(hWnd, &ps);
-	InvalidateRect(hWnd, NULL, FALSE);
+	hdc = GetDC(hWnd);
+
+	HPEN hp;
+	hp = CreatePen(PS_SOLID, currentSize, RGB(0, 0, 0));
+	SelectObject(hdc, hp);
+
+	POINT point[2];
+	point[0].x = 850;
+	point[0].y = 50;
+	point[1].x = 950;
+	point[1].y = 50;
+	Polyline(hdc, point, 2);
+
+	hp = CreatePen(PS_DOT, currentSize, RGB(0, 0, 0));
+	SelectObject(hdc, hp);
+	point[0].x = 850;
+	point[0].y = 80;
+	point[1].x = 950;
+	point[1].y = 80;
+	Polyline(hdc, point, 2);
+
+	hp = CreatePen(PS_DASHDOT, currentSize, RGB(0, 0, 0));
+	SelectObject(hdc, hp);
+	point[0].x = 850;
+	point[0].y = 110;
+	point[1].x = 950;
+	point[1].y = 110;
+	Polyline(hdc, point, 2);
+
+	hp = CreatePen(PS_DASH, currentSize, RGB(0, 0, 0));
+	SelectObject(hdc, hp);
+	point[0].x = 850;
+	point[0].y = 140;
+	point[1].x = 950;
+	point[1].y = 140;
+	Polyline(hdc, point, 2);
+
 	ReleaseDC(hWnd, hdc);
 }
-void SaveImage() {
-	
-	int result = MessageBox(hwndDrawArea, L"Do u wanna save file??", L"Save Image", MB_YESNO | MB_ICONQUESTION);
-	if (result == 6) {
-		ExportImage();
-	}
-}
+
 void ExportImage() {
 	OPENFILENAME ofn;
 	WCHAR szFileName[MAX_PATH] = L"";
@@ -1164,129 +1249,6 @@ void ExportImage() {
 		DeleteDC(hTargetDC);
 	}
 }
-void setToolBox(HDC hdc, HWND hWnd, HPEN hPen, HBRUSH hBrush) {
-	PAINTSTRUCT ps;
-
-	hdc = BeginPaint(hwndShape[0], &ps);
-	DrawLine(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[1], &ps);
-	DrawIsosceleTriangle(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[2], &ps);
-	DrawTriangle(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[3], &ps);
-	DrawQuadrilateral(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[4], &ps);
-	DrawPentagon(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[5], &ps);
-	DrawHexagon(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[6], &ps);
-	DrawForwardArrow(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[7], &ps);
-	DrawBackArrow(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[8], &ps);
-	DrawDownArrow(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[9], &ps);
-	DrawUpArrow(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[10], &ps);
-	DrawFourPointStar(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[11], &ps);
-	DrawFivePointStar(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[12], &ps);
-	DrawSixPointStar(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[13], &ps);
-	DrawLightning(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[14], &ps);
-	Rectangle(hdc, 5, 5, 15, 15);
-
-	hdc = BeginPaint(hwndShape[14], &ps);
-	DrawRoundRect(hdc, 5, 5, 15, 15);
-	/*
-	hBrush = CreateSolidBrush(currentMauNen);
-	hdc = BeginPaint(hwndCurrentColor, &ps);
-	SelectObject(hdc, hBrush);
-	Rectangle(hdc, 2, 10, 97, 127);
-	EndPaint(hwndCurrentColor, &ps);
-	*/
-
-	for (int i = 0;i < 10;i++) {
-		hBrush = CreateSolidBrush(color[i]);
-
-		hdc = BeginPaint(hwndMauNen[i], &ps);
-		SelectObject(hdc, hBrush);
-		Rectangle(hdc, 2, 2, 33, 33);
-		EndPaint(hwndMauNen[i], &ps);
-
-		hdc = BeginPaint(hwndMauVien[i], &ps);
-		SelectObject(hdc, hBrush);
-		Rectangle(hdc, 2, 2, 33, 33);
-		DeleteObject(hBrush);
-		EndPaint(hwndMauVien[i], &ps);
-	}
-	hdc = GetDC(hWnd);
-
-	hPen = CreatePen(PS_SOLID, currentSize, RGB(0,0,0));
-	SelectObject(hdc, hPen);
-
-	POINT point[2];
-	point[0].x = 850;
-	point[0].y = 50;
-	point[1].x = 950;
-	point[1].y = 50;
-	Polyline(hdc, point, 2);
-
-	hPen = CreatePen(PS_DOT, currentSize, RGB(0, 0, 0));
-	SelectObject(hdc, hPen);
-	point[0].x = 850;
-	point[0].y = 80;
-	point[1].x = 950;
-	point[1].y = 80;
-	Polyline(hdc, point, 2);
-
-	hPen = CreatePen(PS_DASHDOT, currentSize, RGB(0, 0, 0));
-	SelectObject(hdc, hPen);
-	point[0].x = 850;
-	point[0].y = 110;
-	point[1].x = 950;
-	point[1].y = 110;
-	Polyline(hdc, point, 2);
-
-	hPen = CreatePen(PS_DASH, currentSize, RGB(0, 0, 0));
-	SelectObject(hdc, hPen);
-	point[0].x = 850;
-	point[0].y = 140;
-	point[1].x = 950;
-	point[1].y = 140;
-	Polyline(hdc, point, 2);
-
-	/*
-	hPen = CreatePen(currentStyle, currentSize, currentMauVien);
-	SelectObject(hdc, hPen);
-	point[0].x = 1093;
-	point[0].y = 35;
-	point[1].x = 1093;
-	point[1].y = 140;
-	Polyline(hdc, point, 2);
-	*/
-
-	EndPaint(hwndShape[0], &ps);
-	EndPaint(hWnd, &ps);
-	InvalidateRect(hWnd, NULL, FALSE);
-	ReleaseDC(hWnd, hdc);
-}
 void OpenImage() {
 	OPENFILENAME ofn;
 	WCHAR szFilePath[MAX_PATH] = L"";
@@ -1296,7 +1258,7 @@ void OpenImage() {
 
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = hwndMain;
-	ofn.lpstrFilter = L"Bitmap Files (*.bmp)\0*.bin\0PNG (*.png)\0*.png\0JPEG (*.jpg)\0*.jpg";
+	ofn.lpstrFilter = L"JPEG (*.jpg)\0*.jpg\0PNG (*.png)\0*.png\0Bitmap Files (*.bmp)\0*.bin";
 	ofn.lpstrFile = szFilePath;
 	ofn.lpstrFileTitle = szFileTitle;
 	ofn.nMaxFile = MAX_PATH;
@@ -1341,6 +1303,23 @@ void OpenBitmapByFileName(wstring openFilename) {
 }
 void OnMouseMove(HWND hwnd, int x, int y, UINT keyFlags)
 {
+	HDC hdc1 = GetDC(hwndDrawArea);
+		
+	if (isDraw == true && isClick == true && xLeft !=0 && yTop !=0 && x !=0 && y != 0  ) {
+		
+		if (start == 0) {
+			start++;
+			xLeft = x;
+			yTop = y;
+		}
+		else {
+			DrawDT(hdc1, xLeft, yTop, x, y);
+			xLeft = x;
+			yTop = y;
+		}
+		
+	}
+	ReleaseDC(hwndDrawArea, hdc1);
 	WCHAR buffer[15];
 	swprintf_s(buffer, 15, L"%d x %d", x, y);
 	SendMessage(hwndStatusBar, SB_SETTEXT, 1, (LPARAM)buffer);
