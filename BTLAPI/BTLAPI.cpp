@@ -72,6 +72,7 @@ void DrawNS_6(HDC hdc, int left, int top, int right, int bottom);
 
 void DrawHCN(HDC hdc, int left, int top, int right, int bottom);
 void DrawInline(HBRUSH hbrush,HWND hWnd, COLORREF color[]);
+void setToolBox(HBRUSH hbrush,HWND hWnd, COLORREF color[]);
 void SaveImage();
 void ExportImage();
 void OpenImage();
@@ -187,7 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int N = 10;
 	static int i;
-	static TCHAR labelGroup[][20] = { TEXT("NỀN"),TEXT("VIỀN"),TEXT("MORE"),TEXT("SIZE"),TEXT("STYLE") };
+	static TCHAR labelGroup[][20] = { TEXT("BACKGROUND"),TEXT("BORDER"),TEXT("MORE"),TEXT("SIZE"),TEXT("STYLE") };
 	static TCHAR labelSize[][20] = { TEXT("1"),TEXT("2"),TEXT("3"),TEXT("4"),TEXT("5") };
 	
 	//static COLORREF color[5] = { RGB(255,0,0),RGB(0,255,0),RGB(0,0,255),RGB(255,255,0),RGB(0,255,255) };
@@ -405,7 +406,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
@@ -413,7 +414,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
@@ -421,9 +422,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				//InvalidateRect(hWnd, NULL, FALSE);
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 50: {
@@ -438,7 +439,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						currentSize = 1;
 					}
 					
-					hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
@@ -446,7 +447,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
@@ -454,9 +455,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				//InvalidateRect(hWnd, NULL, FALSE);
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 51: {
@@ -470,7 +471,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
@@ -478,7 +479,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
@@ -486,10 +487,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
 				
-				//InvalidateRect(hWnd, NULL, FALSE);
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 52: {
@@ -504,7 +505,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						currentSize = 1;
 					}
 					
-					hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 2) {
 					if (currentSize != 1) {
@@ -513,7 +514,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						currentSize = 1;
 					}
 					
-					hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
 				}
 				else if (currentStyle == 3) {
 					if (currentSize != 1) {
@@ -521,17 +522,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							L"Warning", MB_ICONINFORMATION | MB_OK);
 						currentSize = 1;
 					}
-					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
+					else hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 				}
-				//InvalidateRect(hWnd, NULL, FALSE);
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			
 				
 			case 54:
 			{
-				memset(&cc, 0, sizeof(CHOOSECOLOR));
-				//ZeroMemory(&cc, sizeof(CHOOSECOLOR));
+				//memset(&cc, 0, sizeof(CHOOSECOLOR));
+				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
 				cc.lStructSize = sizeof(CHOOSECOLOR);
 				cc.hwndOwner = hWnd;
 				cc.lpCustColors = (LPDWORD)acrCustClr;
@@ -543,7 +544,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					currentMauNen = cc.rgbResult;
 					hBrushHinh = CreateSolidBrush(currentMauNen);
 				}
-				
+				InvalidateRect(hWnd, NULL, FALSE);
 				ReleaseDC(hWnd, hdc);
 				break;
 			}
@@ -570,7 +571,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
 						}
 					}
-				
+				InvalidateRect(hWnd, NULL, FALSE);
 				ReleaseDC(hWnd, hdc);
 				break;
 			}
@@ -578,12 +579,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case 57: {
 				currentStyle = wmId - 57;
 				hPen = CreatePen(PS_SOLID, currentSize, currentMauVien);
-				InvalidateRect(hWnd, NULL, FALSE);
-				SendMessage(hwndStyleBrush[currentStyle ], BM_SETCHECK, 1, 0);
+				
+				SendMessage(hwndStyleBrush[currentStyle], BM_SETCHECK, 1, 0);
 				for (int vitri = 0; vitri < 4; vitri++) {
 					if (vitri == (currentStyle )) continue;
 					SendMessage(hwndStyleBrush[vitri], BM_SETCHECK, 0, 0);
 				}
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 			case 58: {
@@ -594,12 +596,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				currentStyle = wmId - 57;
 				hPen = CreatePen(PS_DOT, currentSize, currentMauVien);
-				InvalidateRect(hWnd, NULL, FALSE);
+				
 				SendMessage(hwndStyleBrush[currentStyle ], BM_SETCHECK, 1, 0);
 				for (int vitri = 0; vitri < 4; vitri++) {
 					if (vitri == (currentStyle )) continue;
 					SendMessage(hwndStyleBrush[vitri], BM_SETCHECK, 0, 0);
 				}
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}	
 			case 59: {
@@ -610,12 +613,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				currentStyle = wmId - 57;
 				hPen = CreatePen(PS_DASHDOT, currentSize, currentMauVien);
-				InvalidateRect(hWnd, NULL, FALSE);
+				
 				SendMessage(hwndStyleBrush[currentStyle ], BM_SETCHECK, 1, 0);
 				for (int vitri = 0; vitri < 4; vitri++) {
 					if (vitri == (currentStyle )) continue;
 					SendMessage(hwndStyleBrush[vitri], BM_SETCHECK, 0, 0);
 				}
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}	
 			case 60: {
@@ -626,12 +630,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				currentStyle = wmId - 57;
 				hPen = CreatePen(PS_DASH, currentSize, currentMauVien);
-				InvalidateRect(hWnd, NULL, FALSE);
+				
 				SendMessage(hwndStyleBrush[currentStyle ], BM_SETCHECK, 1, 0);
 				for (int vitri = 0; vitri < 4; vitri++) {
 					if (vitri == (currentStyle )) continue;
 					SendMessage(hwndStyleBrush[vitri], BM_SETCHECK, 0, 0);
 				}
+				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
 				  
@@ -770,7 +775,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HDC hdc = BeginPaint(hWnd, &ps);
 			// TODO: Add any drawing code that uses hdc here...
 			EndPaint(hWnd, &ps);
-			DrawInline(hbrushMaunut,hWnd,color);
+			setToolBox(hbrushMaunut, hWnd, color);
+			//DrawInline(hbrushMaunut,hWnd,color);
             // TODO: Add any drawing code that uses hdc here...
 			break;
         }
@@ -1028,54 +1034,7 @@ void DrawNS_6(HDC hdc, int left, int top, int right, int bottom) {
 
 	Polygon(hdc, p, 13);
 }
-void DrawLightning(HDC hdc, int left, int top, int right, int bottom) {
-	if (right < left) {
-		int t = left;
-		left = right;
-		right = t;
-	}
 
-	if (bottom < top) {
-		int t = top;
-		top = bottom;
-		bottom = t;
-	}
-
-	POINT p[12];
-	p[11].x = p[0].x = left + 8 * (right - left) / 20;
-	p[11].y = p[0].y = top;
-
-	p[1].x = left;
-	p[1].y = top + 4 * (bottom - top) / 20;
-
-	p[2].x = left + 7 * (right - left) / 20;
-	p[2].y = top + 8 * (bottom - top) / 20;
-
-	p[3].x = left + 5 * (right - left) / 20;
-	p[3].y = top + 9 * (bottom - top) / 20;
-
-	p[4].x = left + 11 * (right - left) / 20;
-	p[4].y = top + 13 * (bottom - top) / 20;
-
-	p[5].x = left + 10 * (right - left) / 20;
-	p[5].y = top + 14 * (bottom - top) / 20;
-
-	p[6].x = right;
-	p[6].y = bottom;
-
-	p[7].x = left + 14 * (right - left) / 20;
-	p[7].y = top + 12 * (bottom - top) / 20;
-
-	p[8].x = left + 15 * (right - left) / 20;
-	p[8].y = top + 11 * (bottom - top) / 20;
-
-	p[9].x = left + 21 * (right - left) / 40;
-	p[9].y = top + 7 * (bottom - top) / 20;
-
-	p[10].x = left + 12 * (right - left) / 20;
-	p[10].y = top + 6 * (bottom - top) / 20;
-	Polygon(hdc, p, 12);
-}
 void DrawHCN(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
 		int t = left;
@@ -1208,6 +1167,86 @@ void DrawInline(HBRUSH hbrushMaunut,HWND hWnd, COLORREF color[]) {
 	point[1].y = 140;
 	Polyline(hdc, point, 2);
 
+	ReleaseDC(hWnd, hdc);
+}
+
+void setToolBox(HBRUSH hbrushMaunut, HWND hWnd, COLORREF color[]) {
+	PAINTSTRUCT ps;
+
+	hdc = BeginPaint(hwndShape[0], &ps);
+	DrawDT(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[0], &ps);
+
+	hdc = BeginPaint(hwndShape[1], &ps);
+	DrawTGC(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[1], &ps);
+
+	hdc = BeginPaint(hwndShape[2], &ps);
+	DrawTGV(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[2], &ps);
+
+	hdc = BeginPaint(hwndShape[3], &ps);
+	DrawHT(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[3], &ps);
+
+	hdc = BeginPaint(hwndShape[4], &ps);
+	DrawNG(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[4], &ps);
+
+	hdc = BeginPaint(hwndShape[5], &ps);
+	DrawLG(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[5], &ps);
+
+	hdc = BeginPaint(hwndShape[6], &ps);
+	DrawMT_Right(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[6], &ps);
+
+	hdc = BeginPaint(hwndShape[7], &ps);
+	DrawMT_Left(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[7], &ps);
+
+	hdc = BeginPaint(hwndShape[8], &ps);
+	DrawMT_Down(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[8], &ps);
+
+	hdc = BeginPaint(hwndShape[9], &ps);
+	DrawMT_UP(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[9], &ps);
+
+	hdc = BeginPaint(hwndShape[10], &ps);
+	DrawNS_4(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[10], &ps);
+
+	hdc = BeginPaint(hwndShape[11], &ps);
+	DrawNS_5(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[11], &ps);
+
+	hdc = BeginPaint(hwndShape[12], &ps);
+	DrawNS_6(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[12], &ps);
+
+	hdc = BeginPaint(hwndShape[13], &ps);
+	Rectangle(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[13], &ps);
+
+	hdc = BeginPaint(hwndShape[14], &ps);
+	DrawHCN(hdc, 5, 5, 15, 15);
+	EndPaint(hwndShape[14], &ps);
+
+	for (int i = 0;i < 10;i++) {
+		hbrushMaunut = CreateSolidBrush(color[i]);
+
+		hdc = BeginPaint(hwndMauNen[i], &ps);
+		SelectObject(hdc, hbrushMaunut);
+		Rectangle(hdc, 2, 2, 33, 33);
+		EndPaint(hwndMauNen[i], &ps);
+
+		hdc = BeginPaint(hwndMauVien[i], &ps);
+		SelectObject(hdc, hbrushMaunut);
+		Rectangle(hdc, 2, 2, 33, 33);
+		DeleteObject(hbrushMaunut);
+		EndPaint(hwndMauVien[i], &ps);
+	}
 	ReleaseDC(hWnd, hdc);
 }
 

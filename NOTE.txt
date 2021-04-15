@@ -4,3 +4,16 @@ TẮT DÒNG 724 FILE BTLAPI.CPP ĐỂ CHẠY MƯỢT
 - XEM CÓ CẦN CẢI THIỆN J KHÔNG 
 - ĐỌC QUA CODE ĐI 
 - T4 (14/10) : NỘP  HOẶC T5(15/10)
+
+-Ngày 15/04: 
+Bổ sung thêm:
+2. Thêm text
+
+3. Hiển thị màu đang chọn
+
+4. Erase
+
+5. Chọn vùng để xóa
+
+6. Chọn từng điểm để vẽ hình rồi nối 
+
