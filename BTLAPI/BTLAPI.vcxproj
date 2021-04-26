@@ -141,9 +141,11 @@
   <ItemGroup>
     <ClInclude Include="BTLAPI.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Paint.h" />
     <ClInclude Include="ReadFile.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SaveFile.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>

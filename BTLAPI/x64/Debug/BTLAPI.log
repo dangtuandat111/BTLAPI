@@ -1,23 +1,67 @@
 ﻿  BTLAPI.cpp
 D:\TamThoi\API\Project\BTLAPI\BTLAPI\SaveFile.h(42,37): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(236,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(248,22): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(250,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(252,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(258,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(271,20): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(271,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(272,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(272,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(275,23): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(285,17): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(286,18): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(663,19): warning C4805: '==': unsafe mix of type 'BOOLEAN' and type 'bool' in operation
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(695,17): warning C4805: '==': unsafe mix of type 'BOOLEAN' and type 'bool' in operation
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(708,6): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(708,91): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(206,10): warning C4101: 'hbrush': unreferenced local variable
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(292,8): warning C4101: 'rectStatusBar': unreferenced local variable
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1347,16): warning C4805: '==': unsafe mix of type 'BOOLEAN' and type 'bool' in operation
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1347,35): warning C4805: '==': unsafe mix of type 'BOOLEAN' and type 'bool' in operation
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(203,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(204,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(206,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(207,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(209,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(210,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(210,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(212,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(213,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(213,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(215,50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(215,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(216,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(218,50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(218,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(219,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(221,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(222,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(242,27): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(243,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(243,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(244,50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(244,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(245,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(246,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(247,49): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(247,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(248,51): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(248,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(249,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(250,27): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(251,47): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(251,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(252,49): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(252,27): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(253,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(254,27): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(255,49): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(255,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(256,51): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(256,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(257,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(258,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(259,48): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(259,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(260,50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(260,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(261,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(262,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(274,22): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(276,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(278,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(284,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(297,20): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(297,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(298,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(298,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(301,23): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(311,17): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(312,18): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(860,6): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(860,120): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(231,10): warning C4101: 'hbrush': unreferenced local variable
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(318,8): warning C4101: 'rectStatusBar': unreferenced local variable
   BTLAPI.vcxproj -> D:\TamThoi\API\Project\BTLAPI\x64\Debug\BTLAPI.exe

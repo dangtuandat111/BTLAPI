@@ -5,6 +5,10 @@
 #include "BTLAPI.h"
 #include <vector>
 
+#include <windowsx.h>
+#include <iostream>
+#include <vector>
+
 #include <xstring>
 #include <string>
 #include "SaveFile.h"
@@ -12,6 +16,11 @@
 #include <CommCtrl.h>
 #include "minwinbase.h"
 #include "ReadFile.h"
+#include "Paint.h"
+
+#include "stdafx.h"
+
+#pragma comment(lib, "Gdi32.lib")
 
 #define MAX_LOADSTRING 100
 
@@ -37,11 +46,27 @@ static int currentStyle = 0;
 static HDC hdc;
 static int xLeft=0, yTop=0, xRight=0, yBottom=0;
 int exist = 0;
+PaintLibrary::CShape* pointer;
+PaintLibrary::CShape* pointer2;
+vector<PaintLibrary::CShape*> shapes;
+vector<PaintLibrary::CShape*> temp;
 
-BOOLEAN isDraw = false;
-BOOLEAN isClick = false;
+int temp_firstX;
+int temp_firstY;
+int temp_lastX;
+int temp_lastY;
+
+bool isbegin = false;
+bool isDraw = false;
+bool isClick = false;
+bool isErase = false;
+bool isTesting = false;
+bool pointerSelected = FALSE;
+
 int start = 0;
 
+PaintLibrary::CShape* tempShape;
+PaintLibrary::CShape* currShape;
 
 HDC temp_hdc;
 HWND temp_hWnd;
@@ -69,7 +94,6 @@ void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom);
 void DrawNS_4(HDC hdc, int left, int top, int right, int bottom);
 void DrawNS_5(HDC hdc, int left, int top, int right, int bottom);
 void DrawNS_6(HDC hdc, int left, int top, int right, int bottom);
-
 void DrawHCN(HDC hdc, int left, int top, int right, int bottom);
 void DrawInline(HBRUSH hbrush,HWND hWnd, COLORREF color[]);
 void setToolBox(HBRUSH hbrush,HWND hWnd, COLORREF color[]);
@@ -78,6 +102,7 @@ void ExportImage();
 void OpenImage();
 void OpenBitmapByFileName(wstring openFilename);
 void OnMouseMove(HWND hwnd, int x, int y, UINT keyFlags);
+void OnMouseMove2(HWND hwnd, int x, int y, UINT keyFlags);
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -215,6 +240,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE: //khi kích thước cửa sổ chính của chương trình thay đổi mới chạy vào phần này, khi mới chạy chương trình cũng nhảy vào đây
 	{
 		DrawInline(hbrushMaunut, hWnd, color);
+		//khong su dung set tool box vi se ve lai ca size nua 
 		if (exist == 0) {
 			
 			int width = LOWORD(lParam);
@@ -305,9 +331,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	case WM_MOUSEMOVE:
-		if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 965 && HIWORD(lParam) <= 504) 
-		{ OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE); }
-		else OnMouseMove(hWnd, 0, 0, TRUE);
+		if (isTesting) {
+			temp_lastX = LOWORD(lParam);
+			temp_lastY = HIWORD(lParam);
+			if (pointerSelected == FALSE)
+			{
+				currShape->SetData(temp_firstX, temp_firstY, temp_lastX, temp_lastY, currentMauVien, currentStyle, currentSize);
+				currShape->SetBrush(RGB(255,255,255));
+				InvalidateRect(hWnd, NULL, FALSE);
+			}
+			else
+			{
+				pointer->SetData(temp_firstX, temp_firstY, temp_lastX, temp_lastY, RGB(0, 0, 0), PS_DASH, 1);
+				InvalidateRect(hWnd, NULL, FALSE);
+			}
+			break;
+		}
+		else {
+			if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 965 && HIWORD(lParam) <= 504)
+			{
+				if (isDraw == true) {
+					OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE);
+				}
+				if (isErase == true) {
+					OnMouseMove2(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE);
+				}
+				OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE);
+			}
+			else {
+				OnMouseMove(hWnd, 0, 0, TRUE);
+			}
+		}
 		break;
     case WM_COMMAND:
         {
@@ -639,7 +693,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				InvalidateRect(hWnd, NULL, FALSE);
 				break;
 			}
-				  
+			/*case ID_OPTION_TESTING: 
+				isbegin = true;
+				break;*/
 			case ID_FILE_SAVE:
 				ExportImage();
 				break;
@@ -661,18 +717,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			case ID_OPTION_DRAW:
 				if (isDraw == true) {
-					
 					isDraw = false;
 					isClick = false;
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
 					break;
 				}
 				else
 				{
 					isDraw = true;
 					isClick = false;
+					isErase = false;
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"Draw");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
 				}
 				break;
-
+			case ID_OPTION_ERASE:
+				if (isErase == true) {
+					isErase = false;
+					isClick = false;
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
+				}
+				else {
+					isClick = false;
+					temp_hBrush = CreateSolidBrush(RGB(255, 255, 255));
+					temp_hPen = CreatePen(PS_SOLID, currentSize, RGB(255, 255, 255));
+					isErase = true;
+					isDraw = false;
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"Erase");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
+				}
+				
+				break;
 			case ID_FILE_EXIT:
 				if (MessageBox(NULL, TEXT("Bạn có muốn thoát chương trình không?"), TEXT("THÔNG BÁO"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
 					DestroyWindow(hWnd);
@@ -684,14 +765,77 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			
         }
         break;
-	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDOWN: {
 		xLeft = LOWORD(lParam);
 		yTop = HIWORD(lParam);
 		isClick = true;
 		//ReleaseDC(hWnd, hdc);
+		pointer = NULL;
+		pointer2 = NULL;
+		//InvalidateRect(hWnd, NULL, TRUE);
+		temp_firstX = LOWORD(lParam);
+		temp_firstY = HIWORD(lParam);
+		if (!isTesting && isbegin == true) {
+			isTesting = TRUE;
+			if (pointerSelected == FALSE)
+			{
+				currShape = new PaintLibrary::CLine();
+				/*switch (Hinh)
+				{
+				case 0:
+					currShape = new PaintLibrary::CLine();
+					break;
+				case 1:
+					currShape = new PaintLibrary::CRectangle();
+					break;
+				case 2:
+					currShape = new PaintLibrary::CSquare();
+					break;
+				case 3:
+					currShape = new PaintLibrary::CEllipse();
+					break;
+				case 4:
+					currShape = new PaintLibrary::CCircle();
+					break;
+				case 5:
+					currShape = new PaintLibrary::CArrow();
+					break;
+				case 6:
+					currShape = new PaintLibrary::CStar();
+					break;
+				}*/
+				currShape->SetType(Hinh);
+				currShape->SetData(temp_firstX, temp_firstY, temp_firstX, temp_firstY, currentMauVien, currentStyle, currentSize);
+				currShape->SetBrush(RGB(0,0,0))   ;
+			}
+			else
+			{
+				pointer = new PaintLibrary::CRectangle();
+				pointer->SetType(1);
+				pointer->SetData(temp_firstX, temp_firstY, temp_firstX, temp_firstY, RGB(0, 0, 0), PS_DASH, 1);
+			}
+		}
 		break;
+	}
 	case WM_LBUTTONUP:
 	{
+		
+		if (isTesting) {
+			if (pointerSelected == FALSE)
+			{
+				shapes.push_back(currShape);
+				isTesting = FALSE;
+				temp.clear();
+			}
+			else
+			{
+				pointer2 = pointer;
+				isTesting = FALSE;
+
+			}
+			//InvalidateRect(hWnd, NULL, TRUE);
+			break;
+		}
 		if (isDraw == true) {
 			isClick = false;
 			xLeft = 0;
@@ -700,12 +844,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			yBottom = 0;
 			start = 0;
 			break;
-			
+		}
+		if (isErase == true) {
+			isClick = false;
+			xLeft = 0;
+			yTop = 0;
+			xRight = 0;
+			yBottom = 0;
+			start = 0;
+			break;
 		}
 
 		xRight = LOWORD(lParam);
 		yBottom = HIWORD(lParam);
-		if (yTop <= 160 | xLeft <= 5 | yBottom <= 160 | xRight <= 5 | yTop > 505 | yBottom > 505) break;
+		if (yTop <= 165 | xLeft <= 5 | yBottom <= 160 | xRight >=959 | yTop > 505 | yBottom > 505 | xLeft >=959 | xRight <= 5) break;
 		//xLeft += 160;
 		yTop -= 165;
 		//xRight += 160;
@@ -824,27 +976,27 @@ void DrawDT(HDC hdc, int left, int top, int right, int bottom) {
 	Polyline(hdc, p, 2);
 }
 void DrawTGC(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[4];
-	p[3].x = p[0].x = left + (right - left) / 2;
-	p[3].y = p[0].y = top;
+	POINT p[3];
+	p[0].x = left + (right - left) / 2;
+	p[0].y = top;
 	p[1].x = left;
 	p[1].y = p[2].y = bottom;
 	p[2].x = right;
-	Polygon(hdc, p, 4);
+	Polygon(hdc, p, 3);
 }
 void DrawTGV(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[4];
-	p[3].x = p[0].x = left;
-	p[3].y = p[0].y = top;
+	POINT p[3];
+	p[0].x = left;
+	p[0].y = top;
 	p[1].x = left;
 	p[1].y = p[2].y = bottom;
 	p[2].x = right;
-	Polygon(hdc, p, 4);
+	Polygon(hdc, p, 3);
 }
 void DrawHT(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[5];
-	p[4].x = p[0].x = left + (right - left) / 2;
-	p[4].y = p[0].y = top;
+	POINT p[4];
+	p[0].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[1].y = p[3].y = top + (bottom - top) / 2;
 	p[1].x = right;
@@ -853,12 +1005,12 @@ void DrawHT(HDC hdc, int left, int top, int right, int bottom) {
 	p[2].y = bottom;
 
 	p[3].x = left;
-	Polygon(hdc, p, 5);
+	Polygon(hdc, p, 4);
 }
 void DrawNG(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[6];
-	p[5].x = p[0].x = left + (right - left) / 2;
-	p[5].y = p[0].y = top;
+	POINT p[5];
+	p[0].x =  left + (right - left) / 2;
+	p[0].y =  top;
 
 	p[1].x = left;
 	p[1].y = p[4].y = top + 2 * (bottom - top) / 5;
@@ -869,12 +1021,12 @@ void DrawNG(HDC hdc, int left, int top, int right, int bottom) {
 	p[3].x = left + 4 * (right - left) / 5;
 
 	p[4].x = right;
-	Polygon(hdc, p, 6);
+	Polygon(hdc, p, 5); //6->5
 }
 void DrawLG(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[7];
-	p[6].x = p[0].x = p[3].x = left + (right - left) / 2;
-	p[6].y = p[0].y = top;
+	POINT p[6];
+	p[0].x = p[3].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[2].x = p[1].x = left;
 	p[1].y = p[5].y = top + (bottom - top) / 4;
@@ -883,7 +1035,7 @@ void DrawLG(HDC hdc, int left, int top, int right, int bottom) {
 	p[2].y = p[4].y = top + 3 * (bottom - top) / 4;
 
 	p[3].y = bottom;
-	Polygon(hdc, p, 7);
+	Polygon(hdc, p, 6);
 }
 void DrawMT_Right(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
@@ -891,9 +1043,9 @@ void DrawMT_Right(HDC hdc, int left, int top, int right, int bottom) {
 		left = right;
 		right = t;
 	}
-	POINT p[8];
-	p[7].x = p[0].x = p[1].x = p[4].x = p[5].x = left + (right - left) / 2;
-	p[7].y = p[0].y = top;
+	POINT p[7];
+	p[0].x = p[1].x = p[4].x = p[5].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[1].y = p[2].y = top + (bottom - top) / 4;
 	p[2].x = p[3].x = left;
@@ -903,7 +1055,7 @@ void DrawMT_Right(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[6].x = right;
 	p[6].y = top + (bottom - top) / 2;
-	Polygon(hdc, p, 8);
+	Polygon(hdc, p, 7);
 }
 void DrawMT_Left(HDC hdc, int left, int top, int right, int bottom) {
 	if (right < left) {
@@ -911,9 +1063,9 @@ void DrawMT_Left(HDC hdc, int left, int top, int right, int bottom) {
 		left = right;
 		right = t;
 	}
-	POINT p[8];
-	p[7].x = p[0].x = p[1].x = p[4].x = p[5].x = left + (right - left) / 2;
-	p[7].y = p[0].y = top;
+	POINT p[7];
+	p[0].x = p[1].x = p[4].x = p[5].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[1].y = p[2].y = top + (bottom - top) / 4;
 	p[2].x = p[3].x = right;
@@ -923,7 +1075,7 @@ void DrawMT_Left(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[6].x = left;
 	p[6].y = top + (bottom - top) / 2;
-	Polygon(hdc, p, 8);
+	Polygon(hdc, p, 7);
 }
 void DrawMT_Down(HDC hdc, int left, int top, int right, int bottom) {
 	if (bottom < top) {
@@ -931,9 +1083,9 @@ void DrawMT_Down(HDC hdc, int left, int top, int right, int bottom) {
 		top = bottom;
 		bottom = t;
 	}
-	POINT p[8];
-	p[0].x = p[7].x = p[1].x = left + (right - left) / 4;
-	p[0].y = p[7].y = p[6].y = top;
+	POINT p[7];
+	p[0].x = p[1].x = left + (right - left) / 4;
+	p[0].y = p[6].y = top;
 	p[1].y = p[2].y = p[4].y = p[5].y = top + (bottom - top) / 2;
 	p[2].x = left;
 
@@ -942,7 +1094,7 @@ void DrawMT_Down(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[4].x = right;
 	p[5].x = p[6].x = left + 3 * (right - left) / 4;
-	Polygon(hdc, p, 8);
+	Polygon(hdc, p, 7);
 }
 void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom) {
 	if (bottom < top) {
@@ -950,9 +1102,9 @@ void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom) {
 		top = bottom;
 		bottom = t;
 	}
-	POINT p[8];
-	p[0].x = p[7].x = p[1].x = left + (right - left) / 4;
-	p[0].y = p[7].y = p[6].y = bottom;
+	POINT p[7];
+	p[0].x = p[1].x = left + (right - left) / 4;
+	p[0].y = p[6].y = bottom;
 	p[1].y = p[2].y = p[4].y = p[5].y = top + (bottom - top) / 2;
 	p[2].x = left;
 
@@ -961,12 +1113,12 @@ void DrawMT_UP(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[4].x = right;
 	p[5].x = p[6].x = left + 3 * (right - left) / 4;
-	Polygon(hdc, p, 8);
+	Polygon(hdc, p, 7);
 }
 void DrawNS_4(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[9];
-	p[4].x = p[8].x = p[0].x = left + (right - left) / 2;
-	p[8].y = p[0].y = top;
+	POINT p[8];
+	p[4].x = p[0].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[1].x = p[3].x = left + 2 * (right - left) / 5;
 	p[1].y = p[7].y = top + 2 * (bottom - top) / 5;
@@ -979,12 +1131,12 @@ void DrawNS_4(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[5].x = p[7].x = left + 3 * (right - left) / 5;
 	p[6].x = right;
-	Polygon(hdc, p, 9);
+	Polygon(hdc, p, 8);
 }
 void DrawNS_5(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[11];
-	p[10].x = p[0].x = left + (right - left) / 2;
-	p[10].y = p[0].y = top;
+	POINT p[10];
+	p[0].x = left + (right - left) / 2;
+	p[0].y = top;
 	p[1].x = left + 10 * (right - left) / 16;
 	p[1].y = top + 3 * (bottom - top) / 8;
 
@@ -1011,12 +1163,12 @@ void DrawNS_5(HDC hdc, int left, int top, int right, int bottom) {
 
 	p[9].x = left + 6 * (right - left) / 16;
 	p[9].y = top + 3 * (bottom - top) / 8;
-	Polygon(hdc, p, 11);
+	Polygon(hdc, p, 10);
 }
 void DrawNS_6(HDC hdc, int left, int top, int right, int bottom) {
-	POINT p[13];
-	p[6].x = p[12].x = p[0].x = left + (right - left) / 2;
-	p[12].y = p[0].y = top;
+	POINT p[12];
+	p[6].x = p[0].x = left + (right - left) / 2;
+	p[0].y = top;
 
 	p[5].x = p[1].x = left + (right - left) / 3;
 	p[10].y = p[11].y = p[2].y = p[1].y = top + (bottom - top) / 4;
@@ -1032,7 +1184,7 @@ void DrawNS_6(HDC hdc, int left, int top, int right, int bottom) {
 	p[10].x = p[8].x = right;
 	p[9].x = left + 5 * (right - left) / 6;
 
-	Polygon(hdc, p, 13);
+	Polygon(hdc, p, 12);
 }
 
 void DrawHCN(HDC hdc, int left, int top, int right, int bottom) {
@@ -1352,11 +1504,40 @@ void OnMouseMove(HWND hwnd, int x, int y, UINT keyFlags)
 			yTop = y;
 		}
 		else {
+			HPEN newhpen = CreatePen(PS_SOLID, currentSize, currentMauVien);
+			SelectObject(hdc1, newhpen);
 			DrawDT(hdc1, xLeft, yTop, x, y);
 			xLeft = x;
 			yTop = y;
+			DeleteObject(newhpen);
 		}
 		
+	}
+	ReleaseDC(hwndDrawArea, hdc1);
+	WCHAR buffer[15];
+	swprintf_s(buffer, 15, L"%d x %d", x, y);
+	SendMessage(hwndStatusBar, SB_SETTEXT, 1, (LPARAM)buffer);
+}
+void OnMouseMove2(HWND hwnd, int x, int y, UINT keyFlags)
+{
+	HDC hdc1 = GetDC(hwndDrawArea);
+
+	if (isErase == true && isClick == true && xLeft != 0 && yTop != 0 && x != 0 && y != 0) {
+
+		if (start == 0) {
+			start++;
+			xLeft = x;
+			yTop = y;
+		}
+		else {
+			temp_hPen = CreatePen(PS_SOLID,20, RGB(255,255,255));
+			SelectObject(hdc1, temp_hPen);
+			DrawDT(hdc1, xLeft, yTop, x, y);
+			xLeft = x;
+			yTop = y;
+			DeleteObject(temp_hPen);
+		}
+
 	}
 	ReleaseDC(hwndDrawArea, hdc1);
 	WCHAR buffer[15];

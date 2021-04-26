@@ -33,6 +33,12 @@
     <ClInclude Include="ReadFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Paint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BTLAPI.cpp">
