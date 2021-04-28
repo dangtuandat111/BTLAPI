@@ -156,7 +156,23 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="BTLAPI.ico" />
+    <Image Include="c:\users\admin\onedrive\máy tính\bitmap2.bmp" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\cach_thay_doi_anh_nen_desktop_tren_win_10_win_8_win_7_va_macos_19_GnV_icon.ico" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\daylatest.jpg" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\download_QkU_icon.ico" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\html_color_codes_color_wheel_analogous_thumb_nxq_icon.ico" />
+    <Image Include="c:\users\admin\onedrive\máy tính\icon3.ico" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png-transparent-computer-icons-bmp-file-format-green-shape-text-shape-bitmap.png" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png_transparent_computer_icons_bmp_file_format_green_shape_text_shape_bitmap_y2J_icon.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
+    <Image Include="icon3.ico" />
+    <Image Include="icon4.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur" />
+    <None Include="cursor2.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

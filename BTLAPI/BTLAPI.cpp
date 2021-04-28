@@ -20,6 +20,13 @@
 
 #include "stdafx.h"
 
+//Bat dau sua lan 1
+#include "olectl.h"
+#include <wingdi.h>
+#define ID_TEXT 420
+#define ID_TEXTBOX 69420
+//Ket thuc sua lan 1
+
 #pragma comment(lib, "Gdi32.lib")
 
 #define MAX_LOADSTRING 100
@@ -63,16 +70,35 @@ bool isErase = false;
 bool isTesting = false;
 bool pointerSelected = FALSE;
 
+int kBrush = -1;
+
 int start = 0;
 
 PaintLibrary::CShape* tempShape;
 PaintLibrary::CShape* currShape;
+
+//Bat dau sua lan 2
+HPEN hPenCurCol, hPenCurBorCol;
+HBRUSH hBrushCurCol, hBrushCurBorCol;
+HWND hwndCurCol, hwndTextBox[10], hwndTools, btnText;
+HFONT g_hfFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+COLORREF g_rgbText = RGB(0, 0, 0);
+COLORREF g_rgbBackground = RGB(255, 255, 255);
+COLORREF g_rgbCustom[16] = { 0 };
+COLORREF Colortem[10];
+BOOLEAN isTyping = false;
+static int iTextBox = 0;
+int countTextBox;
+int fontSize;
+TCHAR buff[1024];
+//Ket thuc sua lan 2
 
 HDC temp_hdc;
 HWND temp_hWnd;
 HPEN temp_hPen;
 HBRUSH temp_hBrush;
 #define ID_DRAW_AREA 200
+
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -237,6 +263,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     switch (message)
     {
+	//Bat dau sua lan 3
+	case WM_CTLCOLOREDIT:
+	{ 
+		//for (int item = 0; item < iTextBox; item++) {
+		//	if ((HWND)lParam == GetDlgItem(hWnd, ID_TEXTBOX + iTextBox - item -1))
+		//	{
+		//		/*SetBkColor((HDC)wParam, GetSysColor(COLOR_WINDOW));*/
+		//		SetTextColor((HDC)wParam, Colortem[item]);
+		//		return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
+		//	}
+		//}
+
+		if ((HWND)lParam == GetDlgItem(hWnd, ID_TEXTBOX + iTextBox -1 ))
+		{
+			/*SetBkColor((HDC)wParam, GetSysColor(COLOR_WINDOW));*/
+			for (int item = 0; item < iTextBox; item++) {
+				GetDlgItem(hWnd, ID_TEXTBOX + iTextBox - item - 1);
+				SetTextColor((HDC)wParam, Colortem[item]);
+				//return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
+			}
+
+		}
+
+		break;
+	}
+	//Ket thuc sua lan 3
 	case WM_SIZE: //khi kích thước cửa sổ chính của chương trình thay đổi mới chạy vào phần này, khi mới chạy chương trình cũng nhảy vào đây
 	{
 		DrawInline(hbrushMaunut, hWnd, color);
@@ -246,7 +298,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int width = LOWORD(lParam);
 			int height = HIWORD(lParam);
 
-			MoveWindow(hWnd, 200, 150, 990, 600, TRUE);
+			MoveWindow(hWnd, 90, 150, 1350, 600, TRUE);
 			exist = 1;
 		}
 		
@@ -254,7 +306,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	case WM_CREATE: {
-		hwndGroupBox[0] = CreateWindow(TEXT("BUTTON"), TEXT("SHAPE"), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 10, 20, 160, 130, hWnd, (HMENU)(16), NULL, NULL);
+		hwndGroupBox[0] = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_GROUPBOX |BS_ICON, 10, 20, 160, 130, hWnd, (HMENU)(16), NULL, NULL);
+		HICON hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONSHAPE));
+		SendMessage(hwndGroupBox[0], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
 		
 		//0-14
 		while (true) {
@@ -269,12 +323,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		}
 		//16-25
-		hwndGroupBox[1] = CreateWindow(TEXT("BUTTON"), TEXT(""), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 5, 5, 962, 160, hWnd, (HMENU)(17), NULL, NULL);
+		//Bat dau sua lan 4 (chinh kich co window)
+		hwndGroupBox[1] = CreateWindow(TEXT("BUTTON"), TEXT(""), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 5, 5, 1320, 160, hWnd, (HMENU)(17), NULL, NULL);
+		//Ket thuc sua lan 4
 		for (i = 2;i < 4;i++) {
-			hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), labelGroup[i - 2], WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 180 + (i - 2) * 230, 20, 225, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
+			hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_GROUPBOX |BS_ICON, 180 + (i - 2) * 230, 20, 225, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
 		}
-		hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), labelGroup[i - 2], WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 180 + (i - 2) * 230 + 5 , 20, 80, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
+		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
+		SendMessage(hwndGroupBox[2], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
+		SendMessage(hwndGroupBox[3], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_GROUPBOX |BS_ICON, 180 + (i - 2) * 230 + 5 , 20, 80, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
 		i++;
+		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONCOLORPICKER));
+		SendMessage(hwndGroupBox[4], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
 		hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), labelGroup[i - 2], WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 180 + (i - 2) * 230 - 153, 20, 85, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
 		i++;
 		//56
@@ -287,7 +349,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//hwndCurrentColor = CreateWindow(TEXT("button"), TEXT(""), WS_VISIBLE | WS_CHILD | BS_GROUPBOX, 965, 20, 100, 130, hWnd, (HMENU)(58), NULL, NULL);
 		//59
 		//hwndCurrentSize = CreateWindow(TEXT("button"), TEXT(""), WS_VISIBLE | WS_CHILD | BS_GROUPBOX, 1070, 20, 50, 130, hWnd, (HMENU)(59), NULL, NULL);
-		hwndDrawArea = CreateWindow(TEXT("static"), TEXT("DRAW"), WS_VISIBLE | WS_CHILD | SS_GRAYFRAME, 5, 165, 962, 340, hWnd, (HMENU)ID_DRAW_AREA, NULL, NULL);
+		//Bat dau sua lan 5 (Tao groupbox cho mau dang chon,groupbox text,nut Text)
+		hwndCurCol = CreateWindow(TEXT("button"), TEXT("CURRENT COLOR"), WS_CHILD | WS_VISIBLE | BS_GROUPBOX , 965, 20, 150, 130, hWnd, (HMENU)NULL, NULL, NULL);
+		//hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONCURRENT));
+
+		SendMessage(hwndCurCol, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		hwndTools = CreateWindow(TEXT("button"), TEXT("TOOLS"), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 1120, 20, 200, 130, hWnd, (HMENU)NULL, NULL, NULL);
+		btnText = CreateWindow(TEXT("BUTTON"), TEXT("T"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 1130, 40, 35, 35, hWnd, (HMENU)ID_TEXT, NULL, NULL);
+		//Ket thuc sua lan 5
+		
+		//hWnd, 200, 150, 1350, 600, TRUE
+		hwndDrawArea = CreateWindow(TEXT("static"), TEXT("DRAW"), WS_VISIBLE | WS_CHILD | SS_GRAYFRAME, 5, 165, 1319, 348, hWnd, (HMENU)ID_DRAW_AREA, NULL, NULL);
 		//26-36
 		//37-46
 		row = 0;
@@ -308,26 +380,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		//54-55
 		i = 0;
-		hwndChonNen = CreateWindow(TEXT("BUTTON"), TEXT("NỀN"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 650, 55, 60, 30, hWnd, (HMENU)(i + 54), NULL, NULL);
-		hwndChonVien = CreateWindow(TEXT("BUTTON"), TEXT("VIỀN"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 650, 90, 60, 30, hWnd, (HMENU)(i + 55), NULL, NULL);
-		
+		hwndChonNen = CreateWindow(TEXT("BUTTON"), TEXT("NỀN"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | BS_ICON , 650, 55, 60, 30, hWnd, (HMENU)(i + 54), NULL, NULL);
+		hwndChonVien = CreateWindow(TEXT("BUTTON"), TEXT("VIỀN"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | BS_ICON, 650, 90, 60, 30, hWnd, (HMENU)(i + 55), NULL, NULL);
+		HICON hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1));
+		SendMessage(hwndChonNen, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon));
+		hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON2));
+		SendMessage(hwndChonVien, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon));
 		
 		hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, (PCTSTR)NULL, SBARS_SIZEGRIP | WS_CHILD | WS_VISIBLE,
 				0,0,0,0, hWnd, NULL, hInst, NULL);
 
 		RECT rectStatusBar;
 
-		int Parts[] = { 80, 250, 420, 970};
+		int Parts[] = { 80, 250, 650, 1500};
 		SendMessage(hwndStatusBar, SB_SETPARTS, 4, (LPARAM)Parts);
 
 		// tạo text cho status bar
 		SendMessage(hwndStatusBar, SB_SETTEXT, 0, (LPARAM)L"Ready");
 
 		WCHAR buffer[15];
-		swprintf_s(buffer, 15, L"%d x %d",660, 100);
+		swprintf_s(buffer, 15, L"%d x %d",670, 130);
 		SendMessage(hwndStatusBar, SB_SETTEXT, 1, (LPARAM)buffer);
 
 		SendMessage(hwndStyleBrush[0], BM_SETCHECK, 1, 0);
+
+
 		break;
 	}
 	case WM_MOUSEMOVE:
@@ -347,8 +424,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		}
+		
 		else {
-			if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 965 && HIWORD(lParam) <= 504)
+			if (LOWORD(lParam) >= 6 && HIWORD(lParam) >= 166 && LOWORD(lParam) <= 1325 && HIWORD(lParam) <= 511)
 			{
 				if (isDraw == true) {
 					OnMouseMove(hWnd, LOWORD(lParam) - 6, HIWORD(lParam) - 166, TRUE);
@@ -696,11 +774,136 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			/*case ID_OPTION_TESTING: 
 				isbegin = true;
 				break;*/
+				//Bat dau sua lan 6
+			case ID_OPTION_TEXT:
+				//if (!isTyping) {
+				//	isTyping = true;
+				//}
+				//else {
+				//	isTyping = false;
+				//	//SetWindowLongA(GetDlgItem(hwndTextBox, ID_OPTION_TEXT), GWL_STYLE, 0);
+				//	SetWindowLongPtr(hwndTextBox, GWL_STYLE, ES_READONLY);
+				//	//SetWindowPos(hwndTextBox, NULL, 0,0, 0, 0, SWP_FRAMECHANGED);
+				//	
+				//}
+				//SendDlgItemMessage(hwndTextBox, EM_SETREADONLY, TRUE, 0, 0);
+				break;
+
+			case ID_TEXT:
+				if (!isTyping) {
+					isTyping = true;
+					countTextBox = 1;
+					isDraw = false;
+					isErase = false;
+					isTesting = false;
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"Text");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
+
+				}
+				else {
+					isTyping = false;
+					for (int j = 0; j < iTextBox; j++) {
+						SetWindowLongPtr(hwndTextBox[j], GWL_STYLE, ES_READONLY);
+					}
+					WCHAR buffer[15];
+					swprintf_s(buffer, 15, L"");
+					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
+				}
+				break;
+			case ID_OPTION_FONT: {
+				CHOOSEFONT cf = { sizeof(CHOOSEFONT) };
+				LOGFONT lf;
+
+				GetObject(g_hfFont, sizeof(LOGFONT), &lf);
+
+				cf.Flags = CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
+				cf.hwndOwner = hWnd;
+				cf.lpLogFont = &lf;
+				cf.rgbColors = g_rgbText;
+				cf.iPointSize = fontSize;
+
+				if (ChooseFont(&cf))
+				{
+					HFONT hf = CreateFontIndirect(&lf);
+					if (hf)
+					{
+						g_hfFont = hf;
+						SendDlgItemMessage(hWnd, ID_TEXTBOX + iTextBox -1 , WM_SETFONT, (WPARAM)g_hfFont, TRUE);
+					}
+					else
+					{
+						MessageBoxA(hWnd, "Lỗi Font", "Thông báo", MB_OK | MB_ICONEXCLAMATION);
+					}
+
+					g_rgbText = cf.rgbColors;
+
+				}
+			}
+							   break;
+
+			case ID_OPTION_FONTCOLOR: {
+				PAINTSTRUCT ps;
+				HDC hdc;
+				HPEN hPenTextBox;
+				hdc = BeginPaint(hwndTextBox[1], &ps);
+				/*hPenTextBox = CreatePen(PS_SOLID, 1, currentMauVien);
+				SelectObject(hdc, hPenTextBox);*/
+				SetTextColor(hdc, RGB(250, 0, 0));
+				//OPENFILENAME ofn;
+				//WCHAR szFilePath[MAX_PATH] = L"";
+				//WCHAR szFileTitle[MAX_PATH] = L"";
+
+				//ZeroMemory(&ofn, sizeof(ofn));
+
+				//ofn.lStructSize = sizeof(ofn);
+				//ofn.hwndOwner = hwndMain;
+				//ofn.lpstrFilter = L"JPEG (*.jpg)\0*.jpg\0PNG (*.png)\0*.png\0Bitmap Files (*.bmp)\0*.bin";
+				//ofn.lpstrFile = szFilePath;
+				//ofn.lpstrFileTitle = szFileTitle;
+				//ofn.nMaxFile = MAX_PATH;
+				//ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+				//if (GetOpenFileName(&ofn))
+				//{
+				//	HBITMAP hm = GetHBITMAPFromImageFile(szFilePath);
+				//	//hm = LoadImage(NULL, szFilePath, IMAGE_BITMAP, 150, 150, LR_LOADFROMFILE);
+				//	MessageBox(hWnd, szFilePath, TEXT(""), MB_OK);
+				//	
+				//}
+				//else {
+				//	MessageBox(hWnd, TEXT("Error"), TEXT(""), MB_OK);
+				//}
+
+			}
+			break;
+			//Ket thuc sua lan 6
 			case ID_FILE_SAVE:
 				ExportImage();
 				break;
 			case IDM_FILE_NEW: 
-				hwndDrawArea = CreateWindow(TEXT("static"), TEXT("Draw"), WS_VISIBLE | WS_CHILD | SS_GRAYFRAME, 5, 165, 1125, 340, hWnd, (HMENU)ID_DRAW_AREA, NULL, NULL);
+				//hWnd, 200, 150, 1350, 600, TRUE
+				hwndDrawArea = CreateWindow(TEXT("static"), TEXT("DRAW"), WS_VISIBLE | WS_CHILD | SS_GRAYFRAME, 5, 165, 1319, 348, hWnd, (HMENU)ID_DRAW_AREA, NULL, NULL);
+				break;
+			case ID_KIND_HORIZONTAL:
+				kBrush = 0;
+				break;
+			case ID_KIND_BDIAGONAL:
+				kBrush = 1;
+				break;
+			case ID_KIND_VERTICAL:
+				kBrush = 2;
+				break;
+			case ID_KIND_CROSS:
+				kBrush = 3;
+				break;
+			case ID_KIND_FDIAGONAL:
+				kBrush = 4;
+				break;
+			case ID_KIND_DIAGCROSS:
+				kBrush = 5;
+				break;
+			case ID_KIND_SOLID: 
+				kBrush = 6;
 				break;
 			case ID_FILE_OPEN:
 			{
@@ -738,6 +941,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (isErase == true) {
 					isErase = false;
 					isClick = false;
+					isTyping = false;
 					WCHAR buffer[15];
 					swprintf_s(buffer, 15, L"");
 					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
@@ -775,6 +979,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//InvalidateRect(hWnd, NULL, TRUE);
 		temp_firstX = LOWORD(lParam);
 		temp_firstY = HIWORD(lParam);
+		//Bat dau sua lan 7
+		//LoadLibrary(TEXT("Msftedit.dll"));
+		if (isTyping) { //&& countTextBox==1
+			//WS_SIZEBOX
+			if (yTop <= 165 | xLeft <= 5  | yTop > 511 |  xLeft >= 1320 ) break;
+			Colortem[iTextBox] = currentMauVien;
+			hwndTextBox[iTextBox] = CreateWindow(TEXT("edit"), TEXT(""),
+				ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_SIZEBOX,
+				xLeft, yTop, 100, 50, hWnd, (HMENU)(ID_TEXTBOX + iTextBox), NULL, NULL);
+			HDC temp_hdcText = GetDC(hwndTextBox[iTextBox]);
+
+			SetBkColor(temp_hdcText, TRANSPARENT);
+			ReleaseDC(hWnd,temp_hdcText);
+			iTextBox++;
+			//countTextBox=2;
+			xLeft = 0; 
+			yTop = 0;
+			break;
+		}
+		/*if(countTextBox==2){
+			MessageBox(hWnd, TEXT("Chỉ được tồn tại 1 ô text"), TEXT("Thông báo"), MB_OK);
+		}*/
+		//ReleaseDC(hWnd, hdc);
+		//Ket thuc sua lan 7
 		if (!isTesting && isbegin == true) {
 			isTesting = TRUE;
 			if (pointerSelected == FALSE)
@@ -806,7 +1034,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}*/
 				currShape->SetType(Hinh);
 				currShape->SetData(temp_firstX, temp_firstY, temp_firstX, temp_firstY, currentMauVien, currentStyle, currentSize);
-				currShape->SetBrush(RGB(0,0,0))   ;
+				currShape->SetBrush(RGB(255,0,0))   ;
 			}
 			else
 			{
@@ -817,6 +1045,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+	
 	case WM_LBUTTONUP:
 	{
 		
@@ -833,7 +1062,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				isTesting = FALSE;
 
 			}
-			//InvalidateRect(hWnd, NULL, TRUE);
+			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 		}
 		if (isDraw == true) {
@@ -855,9 +1084,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 
+		//5, 165, 1319, 348,
+		//if (yTop <= 165 | xLeft <= 5 | yBottom <= 166 | xRight >= 1320 | yTop > 511 | yBottom > 511 | xLeft >= 1320 | xRight <= 5)
 		xRight = LOWORD(lParam);
 		yBottom = HIWORD(lParam);
-		if (yTop <= 165 | xLeft <= 5 | yBottom <= 160 | xRight >=959 | yTop > 505 | yBottom > 505 | xLeft >=959 | xRight <= 5) break;
+		if (yTop <= 165 | xLeft <= 5 | yBottom <= 166 | xRight >= 1320 | yTop > 511 | yBottom > 511 | xLeft >= 1320 | xRight <= 5) break;
 		//xLeft += 160;
 		yTop -= 165;
 		//xRight += 160;
@@ -865,7 +1096,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		hdc = GetDC(hwndDrawArea);
 		SelectObject(hdc, hPen);
+		if (kBrush == 0) {
+			hBrushHinh = CreateHatchBrush(HS_HORIZONTAL, currentMauNen);
+		}
+		else if (kBrush == 1) {
+			hBrushHinh = CreateHatchBrush(HS_BDIAGONAL, currentMauNen);
+		}
+		else if (kBrush == 2) {
+			hBrushHinh = CreateHatchBrush(HS_VERTICAL, currentMauNen);
+		}
+		else if (kBrush == 3) {
+			hBrushHinh = CreateHatchBrush(HS_CROSS, currentMauNen);
+		}
+		else if (kBrush == 4) {
+			hBrushHinh = CreateHatchBrush(HS_FDIAGONAL, currentMauNen);
+		}
+		else if (kBrush == 5) {
+			hBrushHinh = CreateHatchBrush(HS_DIAGCROSS, currentMauNen);
+		}
+		else if (kBrush == 6) {
+			hBrushHinh = CreateSolidBrush(currentMauNen);
+		}
 		SelectObject(hdc, hBrushHinh);
+		
 		if (Hinh == 0) {
 			DrawDT(hdc, xLeft, yTop, xRight, yBottom);
 		}
@@ -926,6 +1179,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hWnd, &ps);
 			// TODO: Add any drawing code that uses hdc here...
+			//Bat dau sua lan 8
+			hPenCurCol = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			hPenCurBorCol = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			hBrushCurCol = CreateSolidBrush(currentMauNen);
+			hBrushCurBorCol = CreateSolidBrush(currentMauVien);
+
+			//Mau nen
+			SelectObject(hdc, hPenCurCol);
+			SelectObject(hdc, hBrushCurCol);
+			TextOutA(hdc, 970, 110, "Background  Border", 19);
+			TextOutA(hdc, 1020, 20, "CURRENT", 19);
+
+			//TextOutA(hdc,300,300,"Background  Border",19);
+			/*GetWindowRect(hWnd, &rect);
+			DrawTextA(hdc,"Background", 12,&rect, DT_CALCRECT);*/
+			Rectangle(hdc, 980, 50, 1030, 100);
+			//Mau vien
+			SelectObject(hdc, hPenCurBorCol);
+			SelectObject(hdc, hBrushCurBorCol);
+			Rectangle(hdc, 1050, 50, 1100, 100);
+			//Ket thuc sua lan 8
 			EndPaint(hWnd, &ps);
 			setToolBox(hbrushMaunut, hWnd, color);
 			//DrawInline(hbrushMaunut,hWnd,color);
@@ -1522,7 +1796,7 @@ void OnMouseMove2(HWND hwnd, int x, int y, UINT keyFlags)
 {
 	HDC hdc1 = GetDC(hwndDrawArea);
 
-	if (isErase == true && isClick == true && xLeft != 0 && yTop != 0 && x != 0 && y != 0) {
+	if (isErase == true && isClick == true && xLeft != 0 && yTop != 0 && x != 0 && y != 0 && x <= 1305 && y <= 495 && x > 13 && y> 13) {
 
 		if (start == 0) {
 			start++;
@@ -1530,6 +1804,7 @@ void OnMouseMove2(HWND hwnd, int x, int y, UINT keyFlags)
 			yTop = y;
 		}
 		else {
+			SetCursor(LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR2)));
 			temp_hPen = CreatePen(PS_SOLID,20, RGB(255,255,255));
 			SelectObject(hdc1, temp_hPen);
 			DrawDT(hdc1, xLeft, yTop, x, y);

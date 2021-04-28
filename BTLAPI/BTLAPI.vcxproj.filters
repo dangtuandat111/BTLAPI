@@ -57,5 +57,49 @@
     <Image Include="BTLAPI.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icon2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png-transparent-computer-icons-bmp-file-format-green-shape-text-shape-bitmap.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icon3.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icon4.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\daylatest.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="c:\users\admin\onedrive\máy tính\icon3.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="c:\users\admin\onedrive\máy tính\bitmap2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png_transparent_computer_icons_bmp_file_format_green_shape_text_shape_bitmap_y2J_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\cach_thay_doi_anh_nen_desktop_tren_win_10_win_8_win_7_va_macos_19_GnV_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\download_QkU_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\html_color_codes_color_wheel_analogous_thumb_nxq_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cursor2.cur">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
