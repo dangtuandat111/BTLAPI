@@ -1,6 +1,7 @@
 ﻿// BTLAPI.cpp : Defines the entry point for the application.
 //
 #pragma once
+#include <windows.h>
 #include "framework.h"
 #include "BTLAPI.h"
 #include <vector>
@@ -23,8 +24,13 @@
 //Bat dau sua lan 1
 #include "olectl.h"
 #include <wingdi.h>
+#include <gdiplus.h>
+#include <stdio.h>
 #define ID_TEXT 420
+#define ID_COLORTEXT 421
+#define ID_COLORBKTEXT 422
 #define ID_TEXTBOX 69420
+#define ID_ERASER 423
 //Ket thuc sua lan 1
 
 #pragma comment(lib, "Gdi32.lib")
@@ -37,7 +43,7 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwndShape[20], hwndMauNen[20], hwndMauVien[20], hwndGroupBox[20], hwndSize[20], hwndStyleBrush[5];
 HWND hwndChonVien, hwndChonNen, hwndStyle,hwndCurrentSize, hwndStatusBar;
-static COLORREF color[10] = { RGB(255, 255, 255) ,RGB(195, 195, 195),RGB(185, 122, 87) ,RGB(255, 174, 201) ,RGB(255, 201, 14) ,
+static COLORREF color[10] = { RGB(255, 255, 255) ,RGB(255,0,0),RGB(185, 122, 87) ,RGB(255, 174, 201) ,RGB(255, 201, 14) ,
 									RGB(239, 228, 176) ,  RGB(181, 230, 29) , RGB(153, 217, 234) , RGB(112, 146, 190) , RGB(200, 191, 231) };
 static HWND hwndDrawArea;
 int numShape = 15; 
@@ -78,14 +84,17 @@ PaintLibrary::CShape* tempShape;
 PaintLibrary::CShape* currShape;
 
 //Bat dau sua lan 2
-HPEN hPenCurCol, hPenCurBorCol;
-HBRUSH hBrushCurCol, hBrushCurBorCol;
-HWND hwndCurCol, hwndTextBox[10], hwndTools, btnText;
+HPEN hPenCurCol, hPenCurBorCol, hPenCurColText, hPenCurColorBkText;
+HBRUSH hBrushCurCol, hBrushCurBorCol, hBrushCurColText, hBrushCurColBkText;
+HWND hwndCurCol, hwndTextBox[10], hwndTools, btnText, hwndFontsize, btnColorBkText, btnColorText;
 HFONT g_hfFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 COLORREF g_rgbText = RGB(0, 0, 0);
 COLORREF g_rgbBackground = RGB(255, 255, 255);
 COLORREF g_rgbCustom[16] = { 0 };
+static COLORREF currentColorText = RGB(0, 0, 0);
+static COLORREF currentColorBKText = RGB(255, 255, 255);
 COLORREF Colortem[10];
+COLORREF ColorBKtem[10];
 BOOLEAN isTyping = false;
 static int iTextBox = 0;
 int countTextBox;
@@ -136,6 +145,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+	// Initialize GDI+
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -165,7 +179,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
+	Gdiplus::GdiplusShutdown(gdiplusToken);
     return (int) msg.wParam;
 }
 
@@ -260,9 +274,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int count = 0;
 	int row = 0;
 	int column = 0;
+	COLORREF  acrCustClrText[16];
+	int newColorText = 0;
 
+	COLORREF  acrCustClrBKText[16];
+	int newColorBKText = 0;
     switch (message)
     {
+		//mau text
 	//Bat dau sua lan 3
 	case WM_CTLCOLOREDIT:
 	{ 
@@ -281,6 +300,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			for (int item = 0; item < iTextBox; item++) {
 				GetDlgItem(hWnd, ID_TEXTBOX + iTextBox - item - 1);
 				SetTextColor((HDC)wParam, Colortem[item]);
+				SetBkColor((HDC)wParam, ColorBKtem[item]);
+				SetBkMode((HDC)wParam, OPAQUE);
 				//return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
 			}
 
@@ -289,7 +310,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	//Ket thuc sua lan 3
-	case WM_SIZE: //khi kích thước cửa sổ chính của chương trình thay đổi mới chạy vào phần này, khi mới chạy chương trình cũng nhảy vào đây
+	case WM_SIZE: //khi kích thước cửa sổ chính của chương trình thay đổi mới chạy vào phần này
 	{
 		DrawInline(hbrushMaunut, hWnd, color);
 		//khong su dung set tool box vi se ve lai ca size nua 
@@ -327,12 +348,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hwndGroupBox[1] = CreateWindow(TEXT("BUTTON"), TEXT(""), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 5, 5, 1320, 160, hWnd, (HMENU)(17), NULL, NULL);
 		//Ket thuc sua lan 4
 		for (i = 2;i < 4;i++) {
-			hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_GROUPBOX |BS_ICON, 180 + (i - 2) * 230, 20, 225, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
+			hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), labelGroup[i-2], WS_CHILD | WS_VISIBLE | BS_GROUPBOX , 180 + (i - 2) * 230, 20, 225, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
 		}
-		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
-		SendMessage(hwndGroupBox[2], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
-		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
-		SendMessage(hwndGroupBox[3], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		//hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
+		//SendMessage(hwndGroupBox[2], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		//hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONBACKGROUND));
+		//SendMessage(hwndGroupBox[3], BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
 		hwndGroupBox[i] = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_GROUPBOX |BS_ICON, 180 + (i - 2) * 230 + 5 , 20, 80, 130, hWnd, (HMENU)(i + 16), NULL, NULL);
 		i++;
 		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONCOLORPICKER));
@@ -356,6 +377,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(hwndCurCol, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
 		hwndTools = CreateWindow(TEXT("button"), TEXT("TOOLS"), WS_CHILD | WS_VISIBLE | BS_GROUPBOX, 1120, 20, 200, 130, hWnd, (HMENU)NULL, NULL, NULL);
 		btnText = CreateWindow(TEXT("BUTTON"), TEXT("T"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 1130, 40, 35, 35, hWnd, (HMENU)ID_TEXT, NULL, NULL);
+		hwndFontsize = CreateWindow(TEXT("BUTTON"), TEXT(" "), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON |BS_ICON, 1130, 78, 60, 30, hWnd, (HMENU)ID_ERASER, NULL, NULL);
+		hIcon2 = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICONERASER));
+		SendMessage(hwndFontsize, BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)(hIcon2));
+		btnColorBkText = CreateWindow(TEXT("BUTTON"), TEXT("Màu nền chữ"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 1130, 110, 130, 35, hWnd, (HMENU)ID_COLORBKTEXT, NULL, NULL);
+		btnColorText = CreateWindow(TEXT("BUTTON"), TEXT("Màu chữ"), WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 1170, 40, 90, 35, hWnd, (HMENU)ID_COLORTEXT, NULL, NULL);
 		//Ket thuc sua lan 5
 		
 		//hWnd, 200, 150, 1350, 600, TRUE
@@ -390,7 +416,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hwndStatusBar = CreateWindowEx(0, STATUSCLASSNAME, (PCTSTR)NULL, SBARS_SIZEGRIP | WS_CHILD | WS_VISIBLE,
 				0,0,0,0, hWnd, NULL, hInst, NULL);
 
-		RECT rectStatusBar;
+	
 
 		int Parts[] = { 80, 250, 650, 1500};
 		SendMessage(hwndStatusBar, SB_SETPARTS, 4, (LPARAM)Parts);
@@ -408,6 +434,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	case WM_MOUSEMOVE:
+		//Thu nhung chua lam duoc
 		if (isTesting) {
 			temp_lastX = LOWORD(lParam);
 			temp_lastY = HIWORD(lParam);
@@ -660,10 +687,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 			
-				
+			//bk
 			case 54:
 			{
-				//memset(&cc, 0, sizeof(CHOOSECOLOR));
 				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
 				cc.lStructSize = sizeof(CHOOSECOLOR);
 				cc.hwndOwner = hWnd;
@@ -680,6 +706,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				ReleaseDC(hWnd, hdc);
 				break;
 			}
+			//bor
 			case 55:
 			{
 				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
@@ -775,20 +802,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				isbegin = true;
 				break;*/
 				//Bat dau sua lan 6
-			case ID_OPTION_TEXT:
-				//if (!isTyping) {
-				//	isTyping = true;
-				//}
-				//else {
-				//	isTyping = false;
-				//	//SetWindowLongA(GetDlgItem(hwndTextBox, ID_OPTION_TEXT), GWL_STYLE, 0);
-				//	SetWindowLongPtr(hwndTextBox, GWL_STYLE, ES_READONLY);
-				//	//SetWindowPos(hwndTextBox, NULL, 0,0, 0, 0, SWP_FRAMECHANGED);
-				//	
-				//}
-				//SendDlgItemMessage(hwndTextBox, EM_SETREADONLY, TRUE, 0, 0);
-				break;
-
+			
 			case ID_TEXT:
 				if (!isTyping) {
 					isTyping = true;
@@ -829,7 +843,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					if (hf)
 					{
 						g_hfFont = hf;
-						SendDlgItemMessage(hWnd, ID_TEXTBOX + iTextBox -1 , WM_SETFONT, (WPARAM)g_hfFont, TRUE);
+						SendDlgItemMessage(hWnd, ID_TEXTBOX+iTextBox-1, WM_SETFONT, (WPARAM)g_hfFont, TRUE);
+
 					}
 					else
 					{
@@ -837,45 +852,50 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 
 					g_rgbText = cf.rgbColors;
-
+					fontSize = cf.iPointSize;
+					/*sprintf_s(buff, "Font size: %d", fontSize / 10);
+					SetWindowTextA(hwndFontsize, buff);*/
 				}
 			}
-							   break;
-
-			case ID_OPTION_FONTCOLOR: {
-				PAINTSTRUCT ps;
-				HDC hdc;
-				HPEN hPenTextBox;
-				hdc = BeginPaint(hwndTextBox[1], &ps);
-				/*hPenTextBox = CreatePen(PS_SOLID, 1, currentMauVien);
-				SelectObject(hdc, hPenTextBox);*/
-				SetTextColor(hdc, RGB(250, 0, 0));
-				//OPENFILENAME ofn;
-				//WCHAR szFilePath[MAX_PATH] = L"";
-				//WCHAR szFileTitle[MAX_PATH] = L"";
-
-				//ZeroMemory(&ofn, sizeof(ofn));
-
-				//ofn.lStructSize = sizeof(ofn);
-				//ofn.hwndOwner = hwndMain;
-				//ofn.lpstrFilter = L"JPEG (*.jpg)\0*.jpg\0PNG (*.png)\0*.png\0Bitmap Files (*.bmp)\0*.bin";
-				//ofn.lpstrFile = szFilePath;
-				//ofn.lpstrFileTitle = szFileTitle;
-				//ofn.nMaxFile = MAX_PATH;
-				//ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-				//if (GetOpenFileName(&ofn))
-				//{
-				//	HBITMAP hm = GetHBITMAPFromImageFile(szFilePath);
-				//	//hm = LoadImage(NULL, szFilePath, IMAGE_BITMAP, 150, 150, LR_LOADFROMFILE);
-				//	MessageBox(hWnd, szFilePath, TEXT(""), MB_OK);
-				//	
-				//}
-				//else {
-				//	MessageBox(hWnd, TEXT("Error"), TEXT(""), MB_OK);
-				//}
-
-			}
 			break;
+			case ID_COLORTEXT:
+			{
+				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
+				cc.lStructSize = sizeof(CHOOSECOLOR);
+				cc.hwndOwner = hWnd;
+				cc.lpCustColors = (LPDWORD)acrCustClrText;
+				cc.Flags = CC_FULLOPEN | CC_RGBINIT;
+				if (ChooseColor(&cc))
+				{
+					acrCustClrText[newColorText] = cc.rgbResult;
+					newColorText++;
+					currentColorText = cc.rgbResult;
+					/*hBrushHinh = CreateSolidBrush(currentMauNen);*/
+				}
+				InvalidateRect(hWnd, NULL, FALSE);
+				ReleaseDC(hWnd, hdc);
+				break;
+			}
+			case ID_COLORBKTEXT:
+			{
+				ZeroMemory(&cc, sizeof(CHOOSECOLOR));
+				cc.lStructSize = sizeof(CHOOSECOLOR);
+				cc.hwndOwner = hWnd;
+				cc.lpCustColors = (LPDWORD)acrCustClrText;
+				cc.Flags = CC_FULLOPEN | CC_RGBINIT;
+				if (ChooseColor(&cc))
+				{
+					acrCustClrBKText[newColorBKText] = cc.rgbResult;
+					newColorBKText++;
+					currentColorBKText = cc.rgbResult;
+					/*hBrushHinh = CreateSolidBrush(currentMauNen);*/
+				}
+				InvalidateRect(hWnd, NULL, FALSE);
+				ReleaseDC(hWnd, hdc);
+				break;
+			}
+
+			
 			//Ket thuc sua lan 6
 			case ID_FILE_SAVE:
 				ExportImage();
@@ -937,6 +957,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					SendMessage(hwndStatusBar, SB_SETTEXT, 2, (LPARAM)buffer);
 				}
 				break;
+			case ID_ERASER:
 			case ID_OPTION_ERASE:
 				if (isErase == true) {
 					isErase = false;
@@ -974,17 +995,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		yTop = HIWORD(lParam);
 		isClick = true;
 		//ReleaseDC(hWnd, hdc);
-		pointer = NULL;
-		pointer2 = NULL;
-		//InvalidateRect(hWnd, NULL, TRUE);
-		temp_firstX = LOWORD(lParam);
-		temp_firstY = HIWORD(lParam);
+		
 		//Bat dau sua lan 7
 		//LoadLibrary(TEXT("Msftedit.dll"));
 		if (isTyping) { //&& countTextBox==1
 			//WS_SIZEBOX
 			if (yTop <= 165 | xLeft <= 5  | yTop > 511 |  xLeft >= 1320 ) break;
-			Colortem[iTextBox] = currentMauVien;
+			Colortem[iTextBox] = currentColorText;
+			ColorBKtem[iTextBox] = currentColorBKText;
 			hwndTextBox[iTextBox] = CreateWindow(TEXT("edit"), TEXT(""),
 				ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_SIZEBOX,
 				xLeft, yTop, 100, 50, hWnd, (HMENU)(ID_TEXTBOX + iTextBox), NULL, NULL);
@@ -997,51 +1015,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			xLeft = 0; 
 			yTop = 0;
 			break;
-		}
-		/*if(countTextBox==2){
-			MessageBox(hWnd, TEXT("Chỉ được tồn tại 1 ô text"), TEXT("Thông báo"), MB_OK);
-		}*/
-		//ReleaseDC(hWnd, hdc);
-		//Ket thuc sua lan 7
-		if (!isTesting && isbegin == true) {
-			isTesting = TRUE;
-			if (pointerSelected == FALSE)
-			{
-				currShape = new PaintLibrary::CLine();
-				/*switch (Hinh)
-				{
-				case 0:
-					currShape = new PaintLibrary::CLine();
-					break;
-				case 1:
-					currShape = new PaintLibrary::CRectangle();
-					break;
-				case 2:
-					currShape = new PaintLibrary::CSquare();
-					break;
-				case 3:
-					currShape = new PaintLibrary::CEllipse();
-					break;
-				case 4:
-					currShape = new PaintLibrary::CCircle();
-					break;
-				case 5:
-					currShape = new PaintLibrary::CArrow();
-					break;
-				case 6:
-					currShape = new PaintLibrary::CStar();
-					break;
-				}*/
-				currShape->SetType(Hinh);
-				currShape->SetData(temp_firstX, temp_firstY, temp_firstX, temp_firstY, currentMauVien, currentStyle, currentSize);
-				currShape->SetBrush(RGB(255,0,0))   ;
-			}
-			else
-			{
-				pointer = new PaintLibrary::CRectangle();
-				pointer->SetType(1);
-				pointer->SetData(temp_firstX, temp_firstY, temp_firstX, temp_firstY, RGB(0, 0, 0), PS_DASH, 1);
-			}
 		}
 		break;
 	}
@@ -1182,26 +1155,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//Bat dau sua lan 8
 			hPenCurCol = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 			hPenCurBorCol = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			hPenCurColText = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			hPenCurColorBkText = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 			hBrushCurCol = CreateSolidBrush(currentMauNen);
 			hBrushCurBorCol = CreateSolidBrush(currentMauVien);
+			hBrushCurColText = CreateSolidBrush(currentColorText);
+			hBrushCurColBkText = CreateSolidBrush(currentColorBKText);
 
 			//Mau nen
 			SelectObject(hdc, hPenCurCol);
 			SelectObject(hdc, hBrushCurCol);
 			TextOutA(hdc, 970, 110, "Background  Border", 19);
-			TextOutA(hdc, 1020, 20, "CURRENT", 19);
+			//TextOutA(hdc, 1020, 20, "CURRENT", 19);
+			TextOutA(hdc, 1200, 85, "ERASER", 6);
 
-			//TextOutA(hdc,300,300,"Background  Border",19);
-			/*GetWindowRect(hWnd, &rect);
-			DrawTextA(hdc,"Background", 12,&rect, DT_CALCRECT);*/
 			Rectangle(hdc, 980, 50, 1030, 100);
 			//Mau vien
 			SelectObject(hdc, hPenCurBorCol);
 			SelectObject(hdc, hBrushCurBorCol);
 			Rectangle(hdc, 1050, 50, 1100, 100);
+			//Mau chu
+			SelectObject(hdc, hPenCurColText);
+			SelectObject(hdc, hBrushCurColText);
+			Rectangle(hdc, 1260, 40, 1310, 75);
+			//Mau nen chu
+			SelectObject(hdc, hPenCurColorBkText);
+			SelectObject(hdc, hBrushCurColBkText);
+			Rectangle(hdc, 1260, 145, 1310, 110);
 			//Ket thuc sua lan 8
+			
 			EndPaint(hWnd, &ps);
+			ReleaseDC(hWnd, hdc);
 			setToolBox(hbrushMaunut, hWnd, color);
+
 			//DrawInline(hbrushMaunut,hWnd,color);
             // TODO: Add any drawing code that uses hdc here...
 			break;
@@ -1215,6 +1201,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
     case WM_DESTROY:
         PostQuitMessage(0);
+		
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -1682,7 +1669,7 @@ void ExportImage() {
 
 	ZeroMemory(&ofn, sizeof(ofn));
 
-	ofn.lStructSize = sizeof(ofn); // SEE NOTE BELOW
+	ofn.lStructSize = sizeof(ofn); 
 	ofn.hwndOwner = hwndMain;
 	
 	ofn.lpstrFilter = L"JPEG (*.jpg)\0*.jpg\0PNG (*.png)\0*.png\0Bitmap Files (*.bmp)\0*.bin";
@@ -1718,7 +1705,7 @@ void OpenImage() {
 	OPENFILENAME ofn;
 	WCHAR szFilePath[MAX_PATH] = L"";
 	WCHAR szFileTitle[MAX_PATH] = L"";
-
+	HDC hdc2 = GetDC(hwndDrawArea);
 	ZeroMemory(&ofn, sizeof(ofn));
 
 	ofn.lStructSize = sizeof(ofn);
@@ -1734,38 +1721,19 @@ void OpenImage() {
 	static int orderOpen = 0;
 	if (GetOpenFileName(&ofn))
 	{
-		wstring ws(szFilePath);
-		//string fileName(ws.begin(), ws.end());
-		openFilename = ws;
-		isOpenFile = true;
-		OpenBitmapByFileName(openFilename);
+		//wstring ws(szFilePath);
+		////string fileName(ws.begin(), ws.end());
+		//openFilename = ws;
+		//isOpenFile = true;
+		//OpenBitmapByFileName(openFilename);
+		Gdiplus::Graphics gf(hdc2);
+		Gdiplus::Bitmap bmp(szFilePath);
+		gf.DrawImage(&bmp,0, 0);
 	}
+	ReleaseDC(hwndDrawArea, hdc2);
+	
 }
-void OpenBitmapByFileName(wstring openFilename) {
-	HBITMAP       hBitmap, hOldBitmap;
-	HPALETTE      hPalette, hOldPalette;
-	HDC           hMemDC;
-	BITMAP        bm;
-	HDC hDC = GetDC(hwndDrawArea);
 
-	if (LoadBitmapFromBMPFile(openFilename.c_str(), &hBitmap, &hPalette))
-	{
-		GetObject(hBitmap, sizeof(BITMAP), &bm);
-		hMemDC = CreateCompatibleDC(hDC);
-		hOldBitmap = (HBITMAP)SelectObject(hMemDC, hBitmap);
-		hOldPalette = SelectPalette(hDC, hPalette, FALSE);
-		RealizePalette(hDC); //nhan dang mau
-
-							 // copy hMemDC to hdc
-		BitBlt(hDC, 0, 0, bm.bmWidth, bm.bmHeight,
-			hMemDC, 0, 0, SRCCOPY);
-
-		SelectObject(hMemDC, hOldBitmap);
-		DeleteObject(hBitmap);
-		SelectPalette(hDC, hOldPalette, FALSE);
-		DeleteObject(hPalette);
-	}
-}
 void OnMouseMove(HWND hwnd, int x, int y, UINT keyFlags)
 {
 	HDC hdc1 = GetDC(hwndDrawArea);
@@ -1792,6 +1760,7 @@ void OnMouseMove(HWND hwnd, int x, int y, UINT keyFlags)
 	swprintf_s(buffer, 15, L"%d x %d", x, y);
 	SendMessage(hwndStatusBar, SB_SETTEXT, 1, (LPARAM)buffer);
 }
+//tay
 void OnMouseMove2(HWND hwnd, int x, int y, UINT keyFlags)
 {
 	HDC hdc1 = GetDC(hwndDrawArea);

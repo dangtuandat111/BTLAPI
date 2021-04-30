@@ -48,25 +48,23 @@ D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(259,26): warning C4244: 'argument':
 D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(260,50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(260,28): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 D:\TamThoi\API\Project\BTLAPI\BTLAPI\Paint.h(261,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(316,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(330,22): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(336,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(340,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(346,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(369,20): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(369,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(370,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(370,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(373,23): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(383,17): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(384,18): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(836,25): warning C4566: character represented by universal-character-name '\u1ED7' cannot be represented in the current code page (1252)
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(986,7): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(986,64): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(990,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1091,6): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1091,124): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(257,10): warning C4101: 'hbrush': unreferenced local variable
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(393,8): warning C4101: 'rectStatusBar': unreferenced local variable
-D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(848,10): warning C4101: 'hPenTextBox': unreferenced local variable
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(337,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(351,22): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(357,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(361,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(367,29): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(395,20): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(395,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(396,21): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(396,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(399,23): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(409,17): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(410,18): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(851,25): warning C4566: character represented by universal-character-name '\u1ED7' cannot be represented in the current code page (1252)
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1003,7): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1003,64): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1008,1): warning C4312: 'type cast': conversion from 'int' to 'HMENU' of greater size
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1064,6): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(1064,124): warning C4554: '|': check operator precedence for possible error; use parentheses to clarify precedence
+D:\TamThoi\API\Project\BTLAPI\BTLAPI\BTLAPI.cpp(271,10): warning C4101: 'hbrush': unreferenced local variable
   BTLAPI.vcxproj -> D:\TamThoi\API\Project\BTLAPI\x64\Debug\BTLAPI.exe

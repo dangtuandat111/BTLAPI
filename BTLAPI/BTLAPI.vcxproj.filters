@@ -93,6 +93,9 @@
     <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\html_color_codes_color_wheel_analogous_thumb_nxq_icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\Oxygen-Icons.org-Oxygen-Actions-draw-eraser.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur">

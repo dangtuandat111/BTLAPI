@@ -26,6 +26,8 @@
 #define IDI_ICONCOLORPICKER             142
 #define IDI_ICONCURRENT                 144
 #define IDI_ICON3                       145
+#define IDI_ICON4                       146
+#define IDI_ICONERASER                  146
 #define ID_FILE_OPEN                    32771
 #define ID_FILE_SAVEIMAGE               32772
 #define ID_FILE_EXIT                    32773
@@ -52,6 +54,8 @@
 #define ID_KIND_FDIAGONAL               32800
 #define ID_KIND_DIAGCROSS               32801
 #define ID_KIND_SOLID                   32802
+#define ID_OPTION_FONT32803             32803
+#define ID_ACCELERATOR32808             32808
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -59,8 +63,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        146
-#define _APS_NEXT_COMMAND_VALUE         32803
+#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_COMMAND_VALUE         32810
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

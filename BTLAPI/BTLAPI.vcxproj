@@ -120,6 +120,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,6 +163,7 @@
     <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\download_QkU_icon.ico" />
     <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\html_color_codes_color_wheel_analogous_thumb_nxq_icon.ico" />
     <Image Include="c:\users\admin\onedrive\máy tính\icon3.ico" />
+    <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\Oxygen-Icons.org-Oxygen-Actions-draw-eraser.ico" />
     <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png-transparent-computer-icons-bmp-file-format-green-shape-text-shape-bitmap.png" />
     <Image Include="C:\Users\ADMIN\OneDrive\Máy tính\png_transparent_computer_icons_bmp_file_format_green_shape_text_shape_bitmap_y2J_icon.ico" />
     <Image Include="icon1.ico" />
